@@ -1,7 +1,7 @@
 # backpack-str
 
-  | Str.String | Str.Text | Str.Text.Lazy | Str.ByteString | Str.ByteString.Char8 | Str.ByteString.Lazy | Str.ByteString.Lazy.Char8
----|---|---|---|---|---|---|---
+                | S | T |TL | B |BC |BL |BLC
+----------------|---|---|---|---|---|---|---
 Str             | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 Chr             | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 Index           | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
