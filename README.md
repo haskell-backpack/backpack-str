@@ -1,6 +1,6 @@
 # backpack-str
 
-String types
+**String types**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -8,7 +8,7 @@ Str             | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 Chr             | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 Index           | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-Introducing and eliminating 'Str'
+**Introducing and eliminating 'Str'**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -17,7 +17,7 @@ singleton       | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 pack            | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 unpack          | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-Basic interface
+**Basic interface**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -35,7 +35,7 @@ null            | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 length          | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 compareLength   | ✔ | ✔ | ✔ |   |   |   |  
 
-Transforming strings
+**Transforming strings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -46,7 +46,7 @@ intercalate     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 transpose       | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 replace         |   | ✔ | ✔ |   |   |   |  
 
-Case conversion
+**Case conversion**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -55,7 +55,7 @@ toLower         |   | ✔ | ✔ |   |   |   |
 toUpper         |   | ✔ | ✔ |   |   |   |  
 toTitle         |   | ✔ | ✔ |   |   |   |  
 
-Justification
+**Justification**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -63,7 +63,7 @@ justifyLeft     |   | ✔ | ✔ |   |   |   |
 justifyRight    |   | ✔ | ✔ |   |   |   |  
 center          |   | ✔ | ✔ |   |   |   |  
 
-Reducing strings (folds)
+**Reducing strings (folds)**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -76,7 +76,7 @@ foldr'          | ✔ |   |   | ✔ | ✔ |   |
 foldr1          | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 foldr1'         |   |   |   | ✔ | ✔ |   |  
 
-Special folds
+**Special folds**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -87,7 +87,7 @@ all             | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 maximum         | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 minimum         | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-Building 'Str's
+**Building 'Str's**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -96,14 +96,14 @@ scanl1          | ✔ | ✔ | ✔ | ✔ | ✔ |   |
 scanr           | ✔ | ✔ | ✔ | ✔ | ✔ |   |  
 scanr1          | ✔ | ✔ | ✔ | ✔ | ✔ |   |  
 
-Accumulating maps
+**Accumulating maps**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
 mapAccumL       | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 mapAccumR       | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-Infinite strings
+**Infinite strings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -111,7 +111,7 @@ repeat          | ✔ |   | ✔ |   |   | ✔ | ✔
 cycle           | ✔ |   | ✔ |   |   | ✔ | ✔
 iterate         | ✔ |   | ✔ |   |   | ✔ | ✔
 
-Unfolds and replicates
+**Unfolds and replicates**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -120,7 +120,7 @@ concatReplicate | ✔ | ✔ | ✔ |   |   |   |
 unfoldr         | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 unfoldrN        |   |   |   | ✔ | ✔ |   |  
 
-Substrings: Breaking strings
+**Substrings: Breaking strings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -149,7 +149,7 @@ tails           | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 stripPrefix     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 stripSuffix     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-Substrings: Breaking into many substrings
+**Substrings: Breaking into many substrings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -157,7 +157,7 @@ splitOn         |   | ✔ | ✔ |   |   |   |
 splitWhen       | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 chunksOf        |   | ✔ | ✔ |   |   |   |  
 
-Breaking into lines and words
+**Breaking into lines and words**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -166,7 +166,7 @@ unlines         | ✔ | ✔ | ✔ |   | ✔ |   | ✔
 words           | ✔ | ✔ | ✔ |   | ✔ |   | ✔
 unwords         | ✔ | ✔ | ✔ |   | ✔ |   | ✔
 
-Predicates
+**Predicates**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -174,13 +174,13 @@ isPrefixOf      | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 isSuffixOf      | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 isInfixOf       | ✔ | ✔ | ✔ | ✔ | ✔ |   |  
 
-View patterns
+**View patterns**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
 commonPrefixes  |   | ✔ | ✔ |   |   |   |  
 
-Search for arbitrary substrings
+**Search for arbitrary substrings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -188,14 +188,14 @@ breakSubstring  |   |   |   | ✔ | ✔ |   |
 findSubstring   |   |   |   | ✔ | ✔ |   |  
 findSubstrings  |   |   |   | ✔ | ✔ |   |  
 
-Searching by equality
+**Searching by equality**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
 elem            | ✔ |   |   | ✔ | ✔ | ✔ | ✔
 notElem         | ✔ |   |   | ✔ | ✔ | ✔ | ✔
 
-Searching with a predicate
+**Searching with a predicate**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -204,7 +204,7 @@ filter          | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 partition       | ✔ | ✔ | ✔ | ✔ |   | ✔ |  
 breakOnAll      |   | ✔ | ✔ |   |   |   |  
 
-Indexing 'Str's
+**Indexing 'Str's**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -217,7 +217,7 @@ substringCount  |   | ✔ | ✔ |   |   |   |
 findIndex       | ✔ | ✔ |   | ✔ | ✔ | ✔ | ✔
 findIndices     | ✔ |   |   | ✔ | ✔ | ✔ | ✔
 
-Zipping and unzipping
+**Zipping and unzipping**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -226,26 +226,26 @@ zipWith         | ✔ |   |   | ✔ | ✔ | ✔ | ✔
 packZipWith     | ✔ | ✔ | ✔ |   |   |   |  
 unzip           | ✔ |   |   | ✔ | ✔ | ✔ |  
 
-Ordered Strs
+**Ordered Strs**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
 sort            | ✔ |   |   | ✔ | ✔ |   |  
 
-Copying Strs
+**Copying Strs**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
 copy            | ✔ | ✔ |   | ✔ | ✔ | ✔ | ✔
 
-Using Str as CString
+**Using Str as CString**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
 packCString     | ✔ |   |   | ✔ | ✔ |   |  
 packCStringLen  | ✔ |   |   | ✔ | ✔ |   |  
 
-Using Str as operating system string
+**Using Str as operating system string**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -253,7 +253,7 @@ useAsOSString   | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 newOSString     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 packOSString    | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-Reading from Str
+**Reading from Str**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
