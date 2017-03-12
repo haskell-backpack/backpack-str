@@ -1,0 +1,1280 @@
+signature Str (
+    -- * String types
+    Str,
+    Chr,
+    Index,
+
+    -- * Introducing and eliminating 'Str'
+    empty,
+    singleton,
+    pack,
+    unpack,
+
+    -- * Basic interface
+    cons,
+    cons',
+    snoc,
+    append,
+    head,
+    uncons,
+    unsnoc,
+    last,
+    tail,
+    init,
+    null,
+    length,
+    compareLength,
+
+    -- * Transforming strings
+    map,
+    reverse,
+    intersperse,
+    intercalate,
+    transpose,
+    replace,
+
+    -- * Case conversion
+    toCaseFold,
+    toLower,
+    toUpper,
+    toTitle,
+
+    -- * Justification
+    justifyLeft,
+    justifyRight,
+    center,
+
+    -- * Reducing strings (folds)
+    foldl,
+    foldl',
+    foldl1,
+    foldl1',
+    foldr,
+    foldr',
+    foldr1,
+    foldr1',
+
+    -- * Special folds
+    concat,
+    concatMap,
+    any,
+    all,
+    maximum,
+    minimum,
+
+    -- * Building 'Str's
+    scanl,
+    scanl1,
+    scanr,
+    scanr1,
+
+    -- * Accumulating maps
+    mapAccumL,
+    mapAccumR,
+
+    -- * Infinite strings
+    repeat,
+    cycle,
+    iterate,
+
+    -- * Unfolds and replicates
+    replicate,
+    concatReplicate,
+    unfoldr,
+    unfoldrN,
+
+    -- * Substrings: Breaking strings
+    take,
+    takeEnd,
+    drop,
+    dropEnd,
+    splitAt,
+    takeWhile,
+    takeWhileEnd,
+    dropWhile,
+    dropWhileEnd,
+    stripStart,
+    stripEnd,
+    strip,
+    span,
+    spanEnd,
+    break,
+    breakEnd,
+    breakOn,
+    breakOnEnd,
+    group,
+    groupBy,
+    inits,
+    tails,
+    stripPrefix,
+    stripSuffix,
+
+    -- * Substrings: Breaking into many substrings
+    splitOn,
+    splitWhen,
+    chunksOf,
+
+    -- * Breaking into lines and words
+    lines,
+    unlines,
+    words,
+    unwords,
+
+    -- * Predicates
+    isPrefixOf,
+    isSuffixOf,
+    isInfixOf,
+
+    -- * View patterns
+    commonPrefixes,
+
+    -- * Search for arbitrary substrings
+    breakSubstring,
+    findSubstring,
+    findSubstrings,
+
+    -- * Searching by equality
+    elem,
+    notElem,
+
+    -- * Searching with a predicate
+    find,
+    filter,
+    partition,
+    breakOnAll,
+
+    -- * Indexing 'Str's
+    index,
+    elemIndex,
+    elemIndices,
+    elemIndexEnd,
+    elemCount,
+    substringCount,
+    findIndex,
+    findIndices,
+
+    -- * Zipping and unzipping
+    zip,
+    zipWith,
+    packZipWith,
+    unzip,
+
+    -- * Ordered Strs
+    sort,
+
+    -- * Copying Strs
+    copy,
+
+    -- * Using Str as CString
+    packCString,
+    packCStringLen,
+
+    -- * Using Str as operating system string
+    useAsOSString,
+    newOSString,
+    packOSString,
+
+    -- * Reading from Str
+    readInt,
+    readInteger,
+) where
+
+-- Constructed by merging the APIs of bytestring and text.
+
+import Prelude (Show, Real, Read, Num, Integral, Enum, Ord, Eq, Monoid,
+                Integer, Maybe, Int, IO, Bool, Ordering)
+
+import System.IO        (Handle)
+import Foreign.C        (CString, CStringLen)
+import Control.DeepSeq  (NFData)
+import Data.String      (IsString)
+import Data.Data        (Data)
+import Data.Ix          (Ix)
+
+-- | An abstract, string-like type of 'Chr'.  It may or may not be Unicode
+-- encoded, and may or may not be packed.
+--
+-- Examples of types which fulfill this signature are 'String',
+-- strict/lazy Chr/Char8 'Str' and strict/lazy 'Text',
+-- but not all operations are supported by all string types.
+--
+-- The interpretation of operations which interact with 'CString' (NUL
+-- terminated C strings) is as follows:
+--
+-- * If 'Str' is Unicode, 'CString' is assumed to have the locale
+--   'GHC.IO.Encoding.getFileSystemEncoding'; i.e., when decoding into
+--   Unicode, it uses PEP 383 to represent otherwise unrepresentable byte
+--   sequences.
+--
+-- * If 'Str' is a binary string, 'CString' is interpreted as a binary
+--   string in the usual way.  (If NUL characters are permittted,
+--   'CStringLen' must be used.)
+--
+-- The provided performance requirements assume the worst-case
+-- performance in the case of an unpacked (list-like) representation
+-- versus a packed representation.  In particular, you should
+-- assume that packed 'Str's may share underlying buffers; use
+-- 'copy' explicitly if you need to break sharing.
+--
+data Str
+
+instance Eq Str
+instance Ord Str
+instance Show Str
+instance Monoid Str
+instance IsString Str
+instance Data Str
+instance NFData Str
+
+-- | Abstract type of characters supported by the string.
+--
+data Chr
+
+instance Eq Chr
+instance Ord Chr
+instance Show Chr
+instance Data Chr
+instance NFData Chr
+
+-- | An abstract type representing indexes into strings.  Usually
+-- this is 'Int', but if you are dealing with streaming data, you
+-- may overflow a 32-bit integer; for these types, the 'Index' type
+-- is a 64-bit integer.
+--
+data Index
+
+instance Eq Index
+instance Ord Index
+instance Enum Index
+instance Integral Index
+instance Num Index
+instance Read Index
+instance Real Index
+instance Show Index
+instance Ix Index
+
+-- --------------------------------------------------------------------
+-- Introducing and eliminating 'Str'
+--
+
+-- | /O(1)/ The empty 'Str'.  This value is expected to coincide with
+-- 'mempty'.
+--
+empty :: Str
+
+-- | /O(1)/ Convert a 'Chr' into a 'Str'.
+--
+singleton :: Chr -> Str
+
+-- | /O(n)/ Convert a 'String' into a 'Str'.  Assumed to coincide with
+-- 'fromString'.
+--
+pack :: [Chr] -> Str
+
+-- | /O(n)/ Convert a 'Str' into a 'String'.
+--
+unpack :: Str -> [Chr]
+
+-- --------------------------------------------------------------------
+-- Basic interface
+--
+
+-- | /O(1)/ Prepend a character onto the beginning of a 'Str'.  This
+-- function is lazy in its second argument, and thus MUST NOT be
+-- implemented for strict string representations.
+--
+cons :: Chr -> Str -> Str
+
+-- | /O(n)/ Unlike 'cons', 'cons\'' is strict in the Str that we are
+-- consing onto, allowing for the possibility that the new 'Chr' can be
+-- coalesced into the string.  This may be as expensive as performing a
+-- full copy of the string, but may be less expensive if the string is
+-- chunked; whether or not coalescing occurs is at the discretion of the
+-- implementation.
+--
+cons' :: Chr -> Str -> Str
+
+-- | /O(n)/ Append a character onto the end of a 'Str'.
+--
+snoc :: Str -> Chr -> Str
+
+-- | /O(n)/ Append two strings.  If the first string is not finite, the result
+-- is the first string.  This operation is expected to coincide with
+-- 'mappend'.
+--
+append :: Str -> Str -> Str
+
+-- | /O(1)/ Extract the first character of a string, which must be non-empty.
+--
+head :: Str -> Chr
+
+-- | /O(1)/ Extract the 'head' and 'tail' of 'Str', returning 'Nothing' if
+-- it is empty.  The resulting 'Str' MAY retain the input argument.
+--
+uncons :: Str -> Maybe (Chr, Str)
+
+-- | /O(n)/ Extract the 'init' and 'last' of a string, returning
+-- 'Nothing' if it is empty.  The resulting 'Str' MAY retain the input
+-- argument.  This can be as fast as /O(1)/ on strict, unpacked representations.
+--
+unsnoc :: Str -> Maybe (Str, Chr)
+
+-- | /O(n)/ Extract the last element of a 'Str', which must be finite
+-- and non-empty.  An exception will be thrown in the case of an empty
+-- 'Str'.  This can be as fast as /O(1)/ on strict, unpacked representations.
+--
+last :: Str -> Chr
+
+-- | /O(n)/ Extract the substring after the head of the string, which must be
+-- non-empty.  The resulting 'Str' MAY retain the input argument.
+-- This can be as fast as /O(1)/ on unpacked representations.
+--
+tail :: Str -> Str
+
+-- | /O(n)/ Return all characters of the 'Str' except the last one.
+-- The resulting 'Str' MAY retain the input argument.
+-- This can be as fast as /O(1)/ on strict, unpacked representations,
+-- or incrementally paid for in lazy representations.
+--
+init :: Str -> Str
+
+-- | /O(1)/ Test whether a 'Str' is empty.
+--
+null :: Str -> Bool
+
+-- | /O(n)/ Return the length of a 'Str' as an 'Int'.
+--
+length :: Str -> Int
+
+-- | /O(n)/ Compare the count of characters in a 'Str' to a number.
+-- This function gives the same answer as comparing against the result
+-- of 'length', but can short circuit if the count of characters is
+-- greater than the number, and hence be more efficient.
+--
+compareLength :: Str -> Int -> Ordering
+
+-- --------------------------------------------------------------------
+-- Transforming strings
+--
+
+-- | /O(n)/ The 'Str' obtained by applying a function to each character
+-- in the string.  This is incrementally paid for in lazy representations.
+--
+map :: (Chr -> Chr) -> Str -> Str
+
+-- | /O(n)/ Returns the reverse of a 'Str'
+--
+reverse :: Str -> Str
+
+-- | /O(n)/ Takes a 'Chr' and a 'Str', and intersperses that character
+-- between the characters of 'Str'.
+--
+intersperse :: Chr -> Str -> Str
+
+-- | /O(n)/ Takes a 'Str' and a list of 'Str's, and concatenates the
+-- list after interspersing the first argument between each 'Str'
+-- in the list.
+--
+intercalate :: Str -> [Str] -> Str
+
+-- | Transposes the rows and columns of its 'Str' argument.
+--
+transpose :: [Str] -> [Str]
+
+-- | Replace every non-overlapping occurrence of @needle@ in
+-- @haystack@ with @replacement@.
+--
+-- This function behaves as though it was defined as follows:
+--
+-- @
+-- replace needle replacement haystack =
+--   'intercalate' replacement ('splitOn' needle haystack)
+-- @
+--
+-- As this suggests, each occurrence is replaced exactly once.  So if
+-- @needle@ occurs in @replacement@, that occurrence will /not/ itself
+-- be replaced recursively:
+--
+-- > replace "oo" "foo" "oo" == "foo"
+--
+-- In cases where several instances of @needle@ overlap, only the
+-- first one will be replaced:
+--
+-- > replace "ofo" "bar" "ofofo" == "barfo"
+--
+replace :: Str
+        -- ^ @needle@ to search for.  If this string is empty, an
+        -- error will occur.
+        -> Str
+        -- ^ @replacement@ to replace @needle@ with.
+        -> Str
+        -- ^ @haystack@ in which to search.
+        -> Str
+
+-- --------------------------------------------------------------------
+-- Case conversion
+--
+
+-- | /O(n)/ Convert a string to folded case as defined by Unicode.
+--
+-- This function is mainly useful for performing caseless (also known
+-- as case insensitive) string comparisons.
+--
+-- A string @x@ is a caseless match for a string @y@ if and only if:
+--
+-- @toCaseFold x == toCaseFold y@
+--
+-- The result string may be longer than the input string, and may
+-- differ from applying 'toLower' to the input string.  For instance,
+-- the Armenian small ligature \"&#xfb13;\" (men now, U+FB13) is case
+-- folded to the sequence \"&#x574;\" (men, U+0574) followed by
+-- \"&#x576;\" (now, U+0576), while the Greek \"&#xb5;\" (micro sign,
+-- U+00B5) is case folded to \"&#x3bc;\" (small letter mu, U+03BC)
+-- instead of itself.
+toCaseFold :: Str -> Str
+
+-- | /O(n)/ Convert a string to lower case, using simple case
+-- conversion as defined by Unicode.
+--
+-- The result string may be longer than the input string.  For
+-- instance, \"&#x130;\" (Latin capital letter I with dot above,
+-- U+0130) maps to the sequence \"i\" (Latin small letter i, U+0069)
+-- followed by \" &#x307;\" (combining dot above, U+0307).
+--
+-- This is NOT the same as @'map' 'Data.Char.toLower'@.
+toLower :: Str -> Str
+
+-- | /O(n)/ Convert a string to upper case, using simple case
+-- conversion as defined by Unicode.
+--
+-- The result string may be longer than the input string.  For
+-- instance, the German \"&#xdf;\" (eszett, U+00DF) maps to the
+-- two-letter sequence \"SS\".
+--
+-- This is NOT the same as @'map' 'Data.Char.toUpper'@.
+toUpper :: Str -> Str
+
+-- | /O(n)/ Convert a string to title case, using simple case
+-- conversion.
+--
+-- The first letter of the input is converted to title case, as is
+-- every subsequent letter that immediately follows a non-letter.
+-- Every letter that immediately follows another letter is converted
+-- to lower case.
+--
+-- The result string may be longer than the input string. For example,
+-- the Latin small ligature &#xfb02; (U+FB02) is converted to the
+-- sequence Latin capital letter F (U+0046) followed by Latin small
+-- letter l (U+006C).
+--
+toTitle :: Str -> Str
+
+-- --------------------------------------------------------------------
+-- Justification
+--
+
+-- | /O(n)/ Left-justify a string to the given length, using the
+-- specified fill character on the right. Subject to fusion.
+-- Performs replacement on invalid scalar values.
+--
+-- Examples:
+--
+-- > justifyLeft 7 'x' "foo"    == "fooxxxx"
+-- > justifyLeft 3 'x' "foobar" == "foobar"
+justifyLeft :: Int -> Chr -> Str -> Str
+
+-- | /O(n)/ Right-justify a string to the given length, using the
+-- specified fill character on the left.  Performs replacement on
+-- invalid scalar values.
+--
+-- Examples:
+--
+-- > justifyRight 7 'x' "bar"    == "xxxxbar"
+-- > justifyRight 3 'x' "foobar" == "foobar"
+justifyRight :: Int -> Chr -> Str -> Str
+
+-- | /O(n)/ Center a string to the given length, using the specified
+-- fill character on either side.  Performs replacement on invalid
+-- scalar values.
+--
+-- Examples:
+--
+-- > center 8 'x' "HS" = "xxxHSxxx"
+center :: Int -> Chr -> Str -> Str
+
+-- --------------------------------------------------------------------
+-- Reducing strings (folds)
+--
+
+-- | Given a binary operator, a starting value (typically the
+-- left-identity of the operator), and a 'Str', reduces the
+-- 'Str' using the binary operator, from left to right.
+--
+foldl :: (a -> Chr -> a) -> a -> Str -> a
+
+-- | Like 'foldl', but strict in the accumulator.
+--
+foldl' :: (a -> Chr -> a) -> a -> Str -> a
+
+-- | A variant of 'foldl' that has no starting value argument, and
+-- thus must be applied to non-empty 'Str's.  An exception will be
+-- thrown in case of an empty 'Str'.
+--
+foldl1 :: (Chr -> Chr -> Chr) -> Str -> Chr
+
+-- | Like 'foldl1', but strict in the accumulator.  An exception will be
+-- thrown in case of an empty 'Str'.
+--
+foldl1' :: (Chr -> Chr -> Chr) -> Str -> Chr
+
+-- | Given a binary operator, a starting value (typically the
+-- right-identity of the operator), and a 'Str', reduces the
+-- 'Str' using the binary operator, from right to left.
+--
+foldr :: (Chr -> a -> a) -> a -> Str -> a
+
+-- | Like 'foldr', but strict in the accumulator.
+--
+foldr' :: (Chr -> a -> a) -> a -> Str -> a
+
+-- | A variant of 'foldr' that has no starting value argument, and
+-- thus must be applied to non-empty 'Str's.  An exception will be
+-- thrown in case of an empty 'Str'.
+--
+foldr1 :: (Chr -> Chr -> Chr) -> Str -> Chr
+
+-- | Like 'foldr1', but strict in the accumulator.  An exception will be
+-- thrown in case of an empty 'Str'.
+--
+foldr1' :: (Chr -> Chr -> Chr) -> Str -> Chr
+
+-- --------------------------------------------------------------------
+-- Special folds
+--
+
+-- | /O(n)/ Concatenate a list of 'Str's
+--
+concat :: [Str] -> Str
+
+-- | Map a function over a 'Str' and concatenate the results
+--
+concatMap :: (Chr -> Str) -> Str -> Str
+
+-- | /O(n)/ Applied to a predicate and a 'Str', any determines if any
+-- character of the 'Str' satisfies the predicate.
+--
+any :: (Chr -> Bool) -> Str -> Bool
+
+-- | /O(n)/ Applied to a predicate and a 'Str', all determines if all
+-- elements of the 'Str' satisfy the predicate.
+--
+all :: (Chr -> Bool) -> Str -> Bool
+
+-- | /O(n)/ 'maximum' returns the maximum value from a 'Str'. An
+-- exception will be thrown in the case of an empty 'Str'.
+--
+maximum :: Str -> Chr
+
+-- | /O(n)/ 'minimum' returns the minimum value from a 'Str'. An
+-- exception will be thrown in the case of an empty 'Str'.
+--
+minimum :: Str -> Chr
+
+-- ---------------------------------------------------------------------
+-- Building Strs
+--
+
+-- | 'scanl' is similar to 'foldl', but returns a list of successive
+-- reduced values from the left.
+--
+scanl :: (Chr -> Chr -> Chr) -> Chr -> Str -> Str
+
+-- Not implemented for Lazy Str
+
+-- | 'scanl1' is a variant of 'scanl' that has no starting value argument.
+--
+scanl1 :: (Chr -> Chr -> Chr) -> Str -> Str
+
+-- | scanr is the right-to-left dual of scanl.
+--
+scanr :: (Chr -> Chr -> Chr) -> Chr -> Str -> Str
+
+-- | 'scanr1' is a variant of 'scanr' that has no starting value argument.
+--
+scanr1 :: (Chr -> Chr -> Chr) -> Str -> Str
+
+-- --------------------------------------------------------------------
+-- Accumulating maps
+--
+
+-- | The 'mapAccumL' function behaves like a combination of 'map' and
+-- 'foldl'; it applies a function to each character of a 'Str',
+-- passing an accumulating parameter from left to right, and returning a
+-- final value of this accumulator together with the new list.
+--
+mapAccumL :: (acc -> Chr -> (acc, Chr)) -> acc -> Str -> (acc, Str)
+
+-- | The 'mapAccumR' function behaves like a combination of 'map' and
+-- 'foldr'; it applies a function to each character of a 'Str',
+-- passing an accumulating parameter from right to left, and returning a
+-- final value of this accumulator together with the new 'Str'.
+--
+mapAccumR :: (acc -> Chr -> (acc, Chr)) -> acc -> Str -> (acc, Str)
+
+-- ---------------------------------------------------------------------
+-- Infinite strings
+--
+
+-- | @'repeat' x@ is an infinite 'Str', with @x@ the value of every
+-- element.  Not supported by strict string representations.
+--
+repeat :: Chr -> Str
+
+-- | 'cycle' ties a finite 'Str' into a circular one, or equivalently,
+-- the infinite repetition of the original 'Str'.  Not supported by
+-- strict string representations.
+--
+cycle :: Str -> Str
+
+-- | @'iterate' f x@ returns an infinite 'Str' of repeated applications
+-- of @f@ to @x@:
+--
+-- > iterate f x == [x, f x, f (f x), ...]
+--
+iterate :: (Chr -> Chr) -> Chr -> Str
+
+-- ---------------------------------------------------------------------
+-- Unfolds and replicates
+--
+
+-- | /O(n)/ 'replicate' @n x@ is a 'Str' of length @n@ with @x@
+-- the value of every character.
+--
+replicate :: Index -> Chr -> Str
+
+-- | /O(n)/ 'concatReplicate' @n x@ is a 'Str' consisting of @x@
+-- repeated @n@ times.  This is sometimes called @replicate@.
+--
+-- > concatReplicate = concat . replicate
+--
+concatReplicate :: Index -> Str -> Str
+
+-- | /O(n)/, where /n/ is the length of the result.  'unfoldr' builds a
+-- 'Str' from a seed value.  The function takes the character and
+-- returns 'Nothing' if it is done producing the 'Str' or returns
+-- 'Just' @(a,b)@, in which case, @a@ is the next byte in the string,
+-- and @b@ is the seed value for further production.
+--
+unfoldr :: (a -> Maybe (Chr, a)) -> a -> Str
+
+-- | /O(n)/ Like 'unfoldr', 'unfoldrN' builds a 'Str' from a seed
+-- value.  However, the length of the result is limited by the first
+-- argument to 'unfoldrN'.  This function is MAY be more efficient than
+-- 'unfoldr' when the maximum length of the result is known.
+--
+-- The following equation relates 'unfoldrN' and 'unfoldr':
+--
+-- > fst (unfoldrN n f s) == take n (unfoldr f s)
+--
+unfoldrN :: Int -> (a -> Maybe (Chr, a)) -> a -> (Str, Maybe a)
+
+-- ---------------------------------------------------------------------
+-- Substrings: Breaking strings
+--
+
+-- | /O(n)/ 'take' @n@, applied to a Str @xs@, returns the prefix
+-- of @xs@ of length @n@, or @xs@ itself if @n > 'length' xs@.
+-- This can be as fast as /O(1)/ on strict, packed representations,
+-- or incrementally paid for in lazy representations.
+--
+take :: Index -> Str -> Str
+
+-- | /O(n)/ 'takeEnd' @n@ @t@ returns the suffix remaining after
+-- taking @n@ characters from the end of @t@.
+--
+-- Examples:
+--
+-- > takeEnd 3 "foobar" == "bar"
+takeEnd :: Index -> Str -> Str
+
+-- | /O(n)/ 'drop' @n xs@ returns the suffix of @xs@ after the first @n@
+-- characters, or @[]@ if @n > 'length' xs@.
+-- This can be as fast as /O(1)/ on strict, packed representations.
+--
+drop  :: Index -> Str -> Str
+
+-- | /O(n)/ 'dropEnd' @n@ @t@ returns the prefix remaining after
+-- dropping @n@ characters from the end of @t@.
+--
+-- Examples:
+--
+-- > dropEnd 3 "foobar" == "foo"
+dropEnd :: Index -> Str -> Str
+
+-- | /O(n)/ 'splitAt' @n xs@ is equivalent to @('take' n xs, 'drop' n xs)@.
+-- The resulting 'Str' MAY retain the input argument.  This can be as
+-- fast as /O(1)/ for strict, packed representations.
+--
+splitAt :: Index -> Str -> (Str, Str)
+
+-- | 'takeWhile', applied to a predicate @p@ and a Str @xs@,
+-- returns the longest prefix (possibly empty) of @xs@ of characters that
+-- satisfy @p@. The resulting 'Str' MAY retain the input argument.
+--
+takeWhile :: (Chr -> Bool) -> Str -> Str
+
+-- | /O(n)/ 'takeWhileEnd', applied to a predicate @p@ and a 'Str',
+-- returns the longest suffix (possibly empty) of elements that
+-- satisfy @p@.
+-- Examples:
+--
+-- > takeWhileEnd (=='o') "foo" == "oo"
+takeWhileEnd :: (Chr -> Bool) -> Str -> Str
+
+-- | 'dropWhile' @p xs@ returns the suffix remaining after 'takeWhile' @p xs@.
+-- The resulting 'Str' MAY retain the input argument.
+--
+dropWhile :: (Chr -> Bool) -> Str -> Str
+
+-- | /O(n)/ 'dropWhileEnd' @p@ @t@ returns the prefix remaining after
+-- dropping characters that satisfy the predicate @p@ from the end of
+-- @t@.
+--
+-- Examples:
+--
+-- > dropWhileEnd (=='.') "foo..." == "foo"
+dropWhileEnd :: (Chr -> Bool) -> Str -> Str
+
+-- | /O(n)/ Remove leading white space from a string.  Equivalent to:
+--
+-- > dropWhile isSpace
+stripStart :: Str -> Str
+
+-- | /O(n)/ Remove trailing white space from a string.  Equivalent to:
+--
+-- > dropWhileEnd isSpace
+stripEnd :: Str -> Str
+
+-- | /O(n)/ Remove leading and trailing white space from a string.
+-- Equivalent to:
+--
+-- > dropAround isSpace
+strip :: Str -> Str
+
+-- | 'span' @p xs@ breaks the 'Str' into two segments. It is
+-- equivalent to @('takeWhile' p xs, 'dropWhile' p xs)@.
+-- The resulting 'Str's MAY retain the input argument.
+--
+span :: (Chr -> Bool) -> Str -> (Str, Str)
+
+-- | 'spanEnd' behaves like 'span' but from the end of the 'Str'.
+-- The resulting 'Str's MAY retain the input argument.
+-- We have
+--
+-- > spanEnd (not.isSpace) "x y z" == ("x y ","z")
+--
+-- and
+--
+-- > spanEnd (not . isSpace) ps
+-- >    ==
+-- > let (x,y) = span (not.isSpace) (reverse ps) in (reverse y, reverse x)
+--
+spanEnd :: (Chr -> Bool) -> Str -> (Str, Str)
+
+-- | 'break' @p@ is equivalent to @'span' ('not' . p)@.
+-- The resulting 'Str's MAY retain the input argument.
+--
+break :: (Chr -> Bool) -> Str -> (Str, Str)
+
+-- | 'breakEnd' behaves like 'break' but from the end of the 'Str'.
+-- The resulting 'Str's MAY retain the input argument.
+--
+-- > breakEnd p == spanEnd (not.p)
+--
+breakEnd :: (Chr -> Bool) -> Str -> (Str, Str)
+
+-- | /O(n+m)/ Find the first instance of @needle@ (which must be
+-- non-'null') in @haystack@.  The first element of the returned tuple
+-- is the prefix of @haystack@ before @needle@ is matched.  The second
+-- is the remainder of @haystack@, starting with the match.
+--
+-- Examples:
+--
+-- > breakOn "::" "a::b::c" ==> ("a", "::b::c")
+-- > breakOn "/" "foobar"   ==> ("foobar", "")
+--
+-- Laws:
+--
+-- > append prefix match == haystack
+-- >   where (prefix, match) = breakOn needle haystack
+--
+-- If you need to break a string by a substring repeatedly (e.g. you
+-- want to break on every instance of a substring), use 'breakOnAll'
+-- instead.
+--
+breakOn :: Str -> Str -> (Str, Str)
+
+-- | /O(n+m)/ Similar to 'breakOn', but searches from the end of the
+-- string.
+--
+-- The first element of the returned tuple is the prefix of @haystack@
+-- up to and including the last match of @needle@.  The second is the
+-- remainder of @haystack@, following the match.
+--
+-- > breakOnEnd "::" "a::b::c" ==> ("a::b::", "c")
+breakOnEnd :: Str -> Str -> (Str, Str)
+
+-- | The 'group' function takes a Str and returns a list of
+-- Strs such that the concatenation of the result is equal to the
+-- argument.  Moreover, each sublist in the result contains only equal
+-- characters.  For example,
+--
+-- > group "Mississippi" = ["M","i","ss","i","ss","i","pp","i"]
+--
+-- It is a special case of 'groupBy', which allows the programmer to
+-- supply their own equality test; this function may be implemented more
+-- efficiently than @'groupBy' (==)@.
+--
+-- The resulting 'Str's MAY retain the input argument.
+--
+group :: Str -> [Str]
+
+-- | The 'groupBy' function is the non-overloaded version of 'group'.
+--
+groupBy :: (Chr -> Chr -> Bool) -> Str -> [Str]
+
+-- | /O(n)/ Return all initial segments of the given 'Str', shortest first.
+-- The resulting 'Str's MAY retain the input argument.
+--
+inits :: Str -> [Str]
+
+-- | /O(n)/ Return all final segments of the given 'Str', longest first.
+-- The resulting 'Str's MAY retain the input argument.
+--
+tails :: Str -> [Str]
+
+-- | /O(n)/ The 'stripPrefix' function takes two Strs and returns 'Just'
+-- the remainder of the second iff the first is its prefix, and otherwise
+-- 'Nothing'.  The resulting 'Str's MAY retain the input argument.
+--
+stripPrefix :: Str -> Str -> Maybe Str
+
+-- | /O(n)/ The 'stripSuffix' function takes two Strs and returns 'Just'
+-- the remainder of the second iff the first is its suffix, and otherwise
+-- 'Nothing'.  The resulting 'Str's MAY retain the input argument.
+--
+stripSuffix :: Str -> Str -> Maybe Str
+
+-- ---------------------------------------------------------------------
+-- Substrings: Breaking into many substrings
+--
+
+-- | Break a 'Str' into pieces separated by the first 'Str'
+-- argument (which cannot be empty), consuming the delimiter. An empty
+-- delimiter is invalid, and will cause an error to be raised.
+--
+-- Examples:
+--
+-- > splitOn "\r\n" "a\r\nb\r\nd\r\ne" == ["a","b","d","e"]
+-- > splitOn "aaa"  "aaaXaaaXaaaXaaa"  == ["","X","X","X",""]
+-- > splitOn "x"    "x"                == ["",""]
+--
+-- and
+--
+-- > intercalate s . splitOn s         == id
+-- > splitOn (singleton c)             == split (==c)
+--
+-- (Note: the string @s@ to split on above cannot be empty.)
+--
+-- This function is sometimes called @split@.
+--
+splitOn :: Str
+        -- ^ String to split on. If this string is empty, an error
+        -- will occur.
+        -> Str
+        -- ^ Input text.
+        -> [Str]
+
+-- | /O(n)/ Splits a 'Str' into components delimited by
+-- separators, where the predicate returns True for a separator character.
+-- The resulting components do not contain the separators.  Two adjacent
+-- separators result in an empty component in the output.  eg.
+--
+-- > splitWhen (=='a') "aabbaca" == ["","","bb","c",""]
+-- > splitWhen (=='a') []        == []
+--
+-- The resulting 'Str's MAY retain the input argument.
+--
+-- This function is sometimes called @splitWith@.
+--
+splitWhen :: (Chr -> Bool) -> Str -> [Str]
+
+-- | /O(n)/ Splits a 'Str' into components of length @k@.  The last
+-- element may be shorter than the other chunks, depending on the
+-- length of the input. Examples:
+--
+-- > chunksOf 3 "foobarbaz"   == ["foo","bar","baz"]
+-- > chunksOf 4 "haskell.org" == ["hask","ell.","org"]
+chunksOf :: Int -> Str -> [Str]
+
+-- ---------------------------------------------------------------------
+-- Breaking into lines and words
+--
+
+-- | 'lines' breaks a 'Str' up into a list of 'Str's at
+-- newline 'Chr's. The resulting strings do not contain newlines.
+-- This operation is not supported for 'Chr' that do not have a notion
+-- of "newline."
+--
+lines :: Str -> [Str]
+
+-- | 'unlines' is an inverse operation to 'lines'.  It joins lines,
+-- after appending a terminating newline to each.
+--
+unlines :: [Str] -> Str
+
+-- | 'words' breaks a Str up into a list of words, which
+-- were delimited by 'Chr' representing white space.
+--
+words :: Str -> [Str]
+
+-- | The 'unwords' function is analogous to the 'unlines' function, on words.
+--
+unwords :: [Str] -> Str
+
+-- ---------------------------------------------------------------------
+-- Predicates
+--
+
+-- | /O(n)/ The 'isPrefixOf' function takes two 'Str's and returns 'True'
+-- if the first is a prefix of the second.
+isPrefixOf :: Str -> Str -> Bool
+
+-- | /O(n)/ The 'isSuffixOf' function takes two Strs and returns 'True'
+-- iff the first is a suffix of the second.
+--
+-- The following holds:
+--
+-- > isSuffixOf x y == reverse x `isPrefixOf` reverse y
+--
+isSuffixOf :: Str -> Str -> Bool
+
+-- | Check whether one string is a substring of another. @isInfixOf
+-- p s@ is equivalent to @not (null (findSubstrings p s))@.
+--
+isInfixOf :: Str -> Str -> Bool
+
+-- ---------------------------------------------------------------------
+-- View patterns
+--
+
+-- | /O(n)/ Find the longest non-empty common prefix of two strings
+-- and return it, along with the suffixes of each string at which they
+-- no longer match.
+--
+-- If the strings do not have a common prefix or either one is empty,
+-- this function returns 'Nothing'.
+--
+-- Examples:
+--
+-- > commonPrefixes "foobar" "fooquux" == Just ("foo","bar","quux")
+-- > commonPrefixes "veeble" "fetzer"  == Nothing
+-- > commonPrefixes "" "baz"           == Nothing
+commonPrefixes :: Str -> Str -> Maybe (Str,Str,Str)
+
+-- ---------------------------------------------------------------------
+-- Search for arbitrary substrings
+--
+
+-- | Break a string on a substring, returning a pair of the part of the
+-- string prior to the match, and the rest of the string.
+--
+-- The following relationships hold:
+--
+-- > break (== c) l == breakSubstring (singleton c) l
+--
+-- and:
+--
+-- > findSubstring s l ==
+-- >    if null s then Just 0
+-- >              else case breakSubstring s l of
+-- >                       (x,y) | null y    -> Nothing
+-- >                             | otherwise -> Just (length x)
+--
+-- For example, to tokenise a string, dropping delimiters:
+--
+-- > tokenise x y = h : if null t then [] else tokenise x (drop (length x) t)
+-- >     where (h,t) = breakSubstring x y
+--
+-- To skip to the first occurence of a string:
+--
+-- > snd (breakSubstring x y)
+--
+-- To take the parts of a string before a delimiter:
+--
+-- > fst (breakSubstring x y)
+--
+-- Note that calling `breakSubstring x` MAY do some preprocessing work, so
+-- you should avoid unnecessarily duplicating breakSubstring calls with the same
+-- pattern.
+--
+-- The resulting 'Str's MAY retain the input argument.
+--
+breakSubstring :: Str -- ^ String to search for
+               -> Str -- ^ String to search in
+               -> (Str,Str) -- ^ Head and tail of string broken at substring
+
+-- | Get the first index of a substring in another string,
+--   or 'Nothing' if the string is not found.
+--   @findSubstring p s@ is equivalent to @listToMaybe (findSubstrings p s)@.
+findSubstring :: Str -- ^ String to search for.
+              -> Str -- ^ String to seach in.
+              -> Maybe Int
+
+-- | Find the indexes of all (possibly overlapping) occurences of a
+-- substring in a string.
+--
+findSubstrings :: Str -- ^ String to search for.
+               -> Str -- ^ String to seach in.
+               -> [Int]
+
+-- ---------------------------------------------------------------------
+-- Searching by equality
+--
+
+-- | /O(n)/ 'elem' is the 'Str' membership predicate.
+elem :: Chr -> Str -> Bool
+
+-- | /O(n)/ 'notElem' is the inverse of 'elem'
+notElem :: Chr -> Str -> Bool
+
+-- ---------------------------------------------------------------------
+-- Searching with a predicate
+--
+
+-- | /O(n)/ The 'find' function takes a predicate and a Str,
+-- and returns the first character in matching the predicate, or 'Nothing'
+-- if there is no such character.
+--
+-- > find f p = case findIndex f p of Just n -> Just (p ! n) ; _ -> Nothing
+--
+find :: (Chr -> Bool) -> Str -> Maybe Chr
+
+-- | /O(n)/ 'filter', applied to a predicate and a Str,
+-- returns a Str containing those characters that satisfy the
+-- predicate.
+--
+filter :: (Chr -> Bool) -> Str -> Str
+
+-- | /O(n)/ The 'partition' function takes a predicate a Str and returns
+-- the pair of Strs with elements which do and do not satisfy the
+-- predicate, respectively; i.e.,
+--
+-- > partition p bs == (filter p xs, filter (not . p) xs)
+--
+partition :: (Chr -> Bool) -> Str -> (Str, Str)
+
+-- | /O(n+m)/ Find all non-overlapping instances of @needle@ in
+-- @haystack@.  Each element of the returned list consists of a pair:
+--
+-- * The entire string prior to the /k/th match (i.e. the prefix)
+--
+-- * The /k/th match, followed by the remainder of the string
+--
+-- Examples:
+--
+-- > breakOnAll "::" ""
+-- > ==> []
+-- > breakOnAll "/" "a/b/c/"
+-- > ==> [("a", "/b/c/"), ("a/b", "/c/"), ("a/b/c", "/")]
+--
+-- The @needle@ parameter may not be empty.
+breakOnAll :: Str              -- ^ @needle@ to search for
+           -> Str              -- ^ @haystack@ in which to search
+           -> [(Str, Str)]
+
+-- ---------------------------------------------------------------------
+-- Indexing Strs
+
+-- | /O(n)/ 'Str' index (subscript) operator, starting from 0.
+-- This may be as fast as /O(1)/ for strict, unpacked representations.
+--
+index :: Str -> Index -> Chr
+
+-- | /O(n)/ The 'elemIndex' function returns the index of the first
+-- character in the given 'Str' which is equal to the query
+-- character, or 'Nothing' if there is no such character.
+--
+elemIndex :: Chr -> Str -> Maybe Index
+
+-- | /O(n)/ The 'elemIndices' function extends 'elemIndex', by returning
+-- the indices of all characters equal to the query character, in ascending order.
+--
+elemIndices :: Chr -> Str -> [Index]
+
+-- | /O(n)/ The 'elemIndexEnd' function returns the last index of the
+-- character in the given 'Str' which is equal to the query
+-- character, or 'Nothing' if there is no such character. The following
+-- holds:
+--
+-- > elemIndexEnd c xs ==
+-- > (-) (length xs - 1) `fmap` elemIndex c (reverse xs)
+--
+elemIndexEnd :: Chr -> Str -> Maybe Index
+
+-- | The 'findIndex' function takes a predicate and a 'Str' and
+-- returns the index of the first character in the 'Str'
+-- satisfying the predicate.
+--
+findIndex :: (Chr -> Bool) -> Str -> Maybe Index
+
+-- | The 'findIndices' function extends 'findIndex', by returning the
+-- indices of all characters satisfying the predicate, in ascending order.
+--
+findIndices :: (Chr -> Bool) -> Str -> [Index]
+
+-- | /O(n)/ elemCount returns the number of times its argument appears in the Str
+--
+-- > elemCount = length . elemIndices
+--
+-- Sometimes, this is referred to as @count@.
+--
+elemCount :: Chr -> Str -> Index
+
+-- | /O(n+m)/ The 'count' function returns the number of times the
+-- query string appears in the given 'Str'. An empty query string is
+-- invalid, and will cause an error to be raised.
+--
+-- > substringCount = length . findSubstrings
+--
+substringCount :: Str -> Str -> Index
+
+-- ---------------------------------------------------------------------
+-- Zipping and unzipping
+--
+
+-- | /O(n)/ 'zip' takes two Strs and returns a list of
+-- corresponding pairs of bytes. If one input Str is short,
+-- excess characters of the longer Str are discarded. This is
+-- equivalent to a pair of 'unpack' operations.
+zip :: Str -> Str -> [(Chr,Chr)]
+
+-- | 'zipWith' generalises 'zip' by zipping with the function given as
+-- the first argument, instead of a tupling function.  For example,
+-- @'zipWith' (+)@ is applied to two Strs to produce the list of
+-- corresponding sums.
+--
+zipWith :: (Chr -> Chr -> a) -> Str -> Str -> [a]
+
+-- | /O(n)/ 'packZipWith' is like 'zipWith', but packs the result
+-- directly into a 'Str'.
+--
+-- > packZipWith = pack . zipWith
+--
+packZipWith :: (Chr -> Chr -> Chr) -> Str -> Str -> Str
+
+-- | /O(n)/ 'unzip' transforms a list of pairs of characters into a pair of
+-- Strs.
+--
+unzip :: [(Chr,Chr)] -> (Str,Str)
+
+-- ---------------------------------------------------------------------
+-- Ordered Strs
+--
+
+-- | /O(n log(n))/ Sort the characters of a 'Str'.  For strings
+-- with small, finite alphabets, this can be done in /O(n)/ time.
+sort :: Str -> Str
+
+-- ---------------------------------------------------------------------
+-- Copying Strs
+--
+
+-- | /O(n)/ Make a copy of a string, such that if the string was
+-- retaining a larger buffer, that buffer is no longer retained.
+-- Despite its name, this does NOT guarantee that the resulting
+-- string is not shared.
+--
+copy :: Str -> Str
+
+-- ---------------------------------------------------------------------
+-- Using Strs as 'CString's
+--
+
+-- | /O(n)./ Construct a new @Str@ from a @CString@. The
+-- resulting @Str@ is an immutable copy of the original
+-- @CString@, and is managed on the Haskell heap. The original
+-- @CString@ must be null terminated.
+--
+-- TODO: Encoding concerns
+--
+packCString :: CString -> IO Str
+
+-- | /O(n)./ Construct a new @Str@ from a @CStringLen@. The
+-- resulting @Str@ is an immutable copy of the original @CStringLen@.
+-- The @Str@ is a normal Haskell value and will be managed on the
+-- Haskell heap.
+--
+-- TODO: Encoding concerns
+--
+packCStringLen :: CStringLen -> IO Str
+
+-- --------------------------------------------------------------------
+-- Interpreting Str as an operating system string
+--
+
+-- | Marshal a 'Str' into a NUL terminated C string using temporary
+-- storage.
+--
+-- * if 'Str' is Unicode, it is encoded to bytes using PEP 383
+--   ('GHC.IO.Encoding.getFileSystemEncoding'), which will interpret
+--   special use of surrogates as otherwise unrepresentable bytes.
+--
+-- * the 'Str' may /not/ contain any NUL characters. However, it may
+--   optionally be NUL terminated.
+--
+-- * the memory is freed when the subcomputation terminates (either
+--   normally or via an exception), so the pointer to the temporary
+--   storage must /not/ be used after this.
+--
+useAsOSString :: Str -> (CString -> IO a) -> IO a
+
+-- | Marshal a 'Str' into a NUL terminated C string. However, it may
+--   optionally be NUL terminated.
+--
+-- * if 'Str' is Unicode, it is encoded to bytes using PEP 383
+--   ('GHC.IO.Encoding.getFileSystemEncoding'), which will interpret
+--   special use of surrogates as otherwise unrepresentable bytes.
+--
+-- * the 'Str' may /not/ contain any NUL characters
+--
+-- * new storage is allocated for the C string and must be
+--   explicitly freed using 'Foreign.Marshal.Alloc.free' or
+--   'Foreign.Marshal.Alloc.finalizerFree'.
+--
+newOSString :: Str -> IO CString
+
+-- | Marshal a NUL terminated C string into a 'Str'.
+--
+-- * if 'Str' is Unicode, we will decode using PEP 383
+--   ('GHC.IO.Encoding.getFileSystemEncoding'), which decode
+--   otherwise uninterpretable bytes as surrogate sequences,
+--   which can be round-tripped back.
+--
+packOSString :: CString -> IO Str
+
+-- --------------------------------------------------------------------
+-- Reading from Str
+--
+
+-- | readInt reads an Int from the beginning of the Str.  If
+-- there is no integer at the beginning of the string, it returns
+-- Nothing, otherwise it just returns the int read, and the rest of the
+-- string.
+
+readInt :: Str -> Maybe (Int, Str)
+
+-- | readInteger reads an Integer from the beginning of the Str.  If
+-- there is no integer at the beginning of the string, it returns Nothing,
+-- otherwise it just returns the int read, and the rest of the string.
+readInteger :: Str -> Maybe (Integer, Str)
