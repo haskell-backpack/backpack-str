@@ -1,6 +1,7 @@
 packages:
     str-sig
     str-bytestring
+    str-bytestring/tests
     str-text
     str-text/tests
     str-string
