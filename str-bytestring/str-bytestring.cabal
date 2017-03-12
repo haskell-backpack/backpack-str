@@ -17,6 +17,7 @@ library
   exposed-modules:     Str.ByteString
                        Str.ByteString.Char8
                        Str.ByteString.Lazy
+                       Str.ByteString.Lazy.Char8
   reexported-modules:  Str.ByteString as Str
   build-depends:       base >= 4.9,
                        bytestring >= 0.10.8 && < 0.11
