@@ -3,7 +3,7 @@ version:             0.1.0.0
 synopsis:            Adaptor modules for Text which implement the Str signature
 description:         Adaptor modules for Text which provide a type named
                      Str and can be used to fill packages parametrized
-                     by str-v1.
+                     by str-sig.
 license:             BSD3
 license-file:        LICENSE
 author:              Edward Z. Yang

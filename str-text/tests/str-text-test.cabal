@@ -12,14 +12,14 @@ cabal-version:       >= 1.25
 library text-sig
   signatures:          Str
   reexported-modules:  Prelude
-  build-depends:       base >= 4.9, str-v1
+  build-depends:       base >= 4.9, str-sig
   default-language:    Haskell2010
 
 library text-lazy-sig
   signatures:          StrLazy
   reexported-modules:  Prelude
-  build-depends:       base >= 4.9, str-v1
-  mixins:              str-v1 requires (Str as StrLazy)
+  build-depends:       base >= 4.9, str-sig
+  mixins:              str-sig requires (Str as StrLazy)
   default-language:    Haskell2010
 
 test-suite implements

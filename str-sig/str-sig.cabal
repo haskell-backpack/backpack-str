@@ -1,12 +1,15 @@
-name:                str-v1
-version:             0.0
+name:                str-sig
+version:             0.1.0.0
 synopsis:            Signature package for String-like types.
 description:         This package provides a Str signature which defines
                      common namespace of all string operations supported
                      by the str packages.
                      .
-                     For implementations of this signature, see the
-                     package str-bytestring.
+                     This package will never introduce a backwards incompatible
+                     change in an update; however, we may release new versions
+                     of this signature which add methods; to obey the PVP,
+                     please locally declare specifically which methods from
+                     this signature you are using.
 license:             BSD3
 license-file:        LICENSE
 author:              Edward Z. Yang

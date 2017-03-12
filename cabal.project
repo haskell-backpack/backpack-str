@@ -1,6 +1,5 @@
 packages:
-    -- bytestring-v10
-    str-v1
+    str-sig
     str-bytestring
     str-text
     str-text/tests
