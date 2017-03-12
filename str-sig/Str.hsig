@@ -4,7 +4,7 @@ signature Str (
     Chr,
     Index,
 
-    -- * Introducing and eliminating 'Str'
+    -- * Introducing and eliminating strings
     empty,
     singleton,
     pack,
@@ -62,7 +62,7 @@ signature Str (
     maximum,
     minimum,
 
-    -- * Building 'Str's
+    -- * Building strings
     scanl,
     scanl1,
     scanr,
@@ -106,8 +106,6 @@ signature Str (
     groupBy,
     inits,
     tails,
-    stripPrefix,
-    stripSuffix,
 
     -- * Substrings: Breaking into many substrings
     splitOn,
@@ -126,6 +124,8 @@ signature Str (
     isInfixOf,
 
     -- * View patterns
+    stripPrefix,
+    stripSuffix,
     commonPrefixes,
 
     -- * Search for arbitrary substrings
@@ -143,7 +143,7 @@ signature Str (
     partition,
     breakOnAll,
 
-    -- * Indexing 'Str's
+    -- * Indexing strings
     index,
     elemIndex,
     elemIndices,
@@ -162,19 +162,19 @@ signature Str (
     -- * Ordered Strs
     sort,
 
-    -- * Copying Strs
+    -- * Copying strings
     copy,
 
-    -- * Using Str as CString
+    -- * Using as CString
     packCString,
     packCStringLen,
 
-    -- * Using Str as operating system string
+    -- * Using as operating system string
     useAsOSString,
     newOSString,
     packOSString,
 
-    -- * Reading from Str
+    -- * Reading integers from strings
     readInt,
     readInteger,
 ) where

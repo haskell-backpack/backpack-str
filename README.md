@@ -1,5 +1,7 @@
 # backpack-str
 
+## Feature matrix
+
 **String types**
 
                 | S | T | TL| B | BC| BL|BLC
@@ -8,7 +10,7 @@ Str             | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 Chr             | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 Index           | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-**Introducing and eliminating 'Str'**
+**Introducing and eliminating strings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -87,7 +89,7 @@ all             | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 maximum         | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 minimum         | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-**Building 'Str's**
+**Building strings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -146,8 +148,6 @@ group           | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 groupBy         | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 inits           | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 tails           | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
-stripPrefix     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
-stripSuffix     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
 **Substrings: Breaking into many substrings**
 
@@ -178,6 +178,8 @@ isInfixOf       | ✔ | ✔ | ✔ | ✔ | ✔ |   |
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
+stripPrefix     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
+stripSuffix     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 commonPrefixes  |   | ✔ | ✔ |   |   |   |  
 
 **Search for arbitrary substrings**
@@ -204,7 +206,7 @@ filter          | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 partition       | ✔ | ✔ | ✔ | ✔ |   | ✔ |  
 breakOnAll      |   | ✔ | ✔ |   |   |   |  
 
-**Indexing 'Str's**
+**Indexing strings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -232,20 +234,20 @@ unzip           | ✔ |   |   | ✔ | ✔ | ✔ |
 ----------------|---|---|---|---|---|---|---
 sort            | ✔ |   |   | ✔ | ✔ |   |  
 
-**Copying Strs**
+**Copying strings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
 copy            | ✔ | ✔ |   | ✔ | ✔ | ✔ | ✔
 
-**Using Str as CString**
+**Using as CString**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
 packCString     | ✔ |   |   | ✔ | ✔ |   |  
 packCStringLen  | ✔ |   |   | ✔ | ✔ |   |  
 
-**Using Str as operating system string**
+**Using as operating system string**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
@@ -253,7 +255,7 @@ useAsOSString   | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 newOSString     | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 packOSString    | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔
 
-**Reading from Str**
+**Reading integers from strings**
 
                 | S | T | TL| B | BC| BL|BLC
 ----------------|---|---|---|---|---|---|---
