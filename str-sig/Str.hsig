@@ -186,7 +186,6 @@ import Prelude (Show, Real, Read, Num, Integral, Enum, Ord, Eq, Monoid,
 
 import System.IO        (Handle)
 import Foreign.C        (CString, CStringLen)
-import Control.DeepSeq  (NFData)
 import Data.String      (IsString)
 import Data.Data        (Data)
 import Data.Ix          (Ix)
@@ -224,7 +223,6 @@ instance Show Str
 instance Monoid Str
 instance IsString Str
 instance Data Str
-instance NFData Str
 
 -- | Abstract type of characters supported by the string.
 --
@@ -234,7 +232,6 @@ instance Eq Chr
 instance Ord Chr
 instance Show Chr
 instance Data Chr
-instance NFData Chr
 
 -- | An abstract type representing indexes into strings.  Usually
 -- this is 'Int', but if you are dealing with streaming data, you
