@@ -6,4 +6,5 @@ sigc str-sig/Str.hsig \
     B=str-bytestring/Str/ByteString.hs \
     BC=str-bytestring/Str/ByteString/Char8.hs \
     BL=str-bytestring/Str/ByteString/Lazy.hs \
-    BLC=str-bytestring/Str/ByteString/Lazy/Char8.hs
+    BLC=str-bytestring/Str/ByteString/Lazy/Char8.hs \
+    F=str-foundation/Str/Foundation.hs
