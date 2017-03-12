@@ -22,6 +22,13 @@ library bytestring-char8-sig
   mixins:              str-sig requires (Str as StrChar8)
   default-language:    Haskell2010
 
+library bytestring-lazy-sig
+  signatures:          StrLazy
+  reexported-modules:  Prelude
+  build-depends:       base >= 4.9, str-sig
+  mixins:              str-sig requires (Str as StrLazy)
+  default-language:    Haskell2010
+
 test-suite implements
   type:                exitcode-stdio-1.0
   main-is:             Main.hs
@@ -39,4 +46,14 @@ test-suite implements-char8
     bytestring-char8-sig,
     str-bytestring
   mixins: str-bytestring (Str.ByteString.Char8 as StrChar8)
+  default-language:    Haskell2010
+
+test-suite implements-lazy
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  build-depends:
+    base,
+    bytestring-lazy-sig,
+    str-bytestring
+  mixins: str-bytestring (Str.ByteString.Lazy as StrLazy)
   default-language:    Haskell2010
