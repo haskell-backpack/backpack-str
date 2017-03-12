@@ -1,7 +1,7 @@
 packages:
     -- bytestring-v10
     str-v1
-    -- str-bytestring
+    str-bytestring
     str-text
     str-text/tests
     str-string
