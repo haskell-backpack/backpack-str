@@ -3,4 +3,4 @@ packages:
     str-v1
     -- str-bytestring
     str-text
-    str-text/sigs/v1
+    str-text/tests

@@ -344,14 +344,14 @@ null :: Str -> Bool
 
 -- | /O(n)/ Return the length of a 'Str' as an 'Int'.
 --
-length :: Str -> Int
+length :: Str -> Index
 
 -- | /O(n)/ Compare the count of characters in a 'Str' to a number.
 -- This function gives the same answer as comparing against the result
 -- of 'length', but can short circuit if the count of characters is
 -- greater than the number, and hence be more efficient.
 --
-compareLength :: Str -> Int -> Ordering
+compareLength :: Str -> Index -> Ordering
 
 -- --------------------------------------------------------------------
 -- Transforming strings
@@ -481,7 +481,7 @@ toTitle :: Str -> Str
 --
 -- > justifyLeft 7 'x' "foo"    == "fooxxxx"
 -- > justifyLeft 3 'x' "foobar" == "foobar"
-justifyLeft :: Int -> Chr -> Str -> Str
+justifyLeft :: Index -> Chr -> Str -> Str
 
 -- | /O(n)/ Right-justify a string to the given length, using the
 -- specified fill character on the left.  Performs replacement on
@@ -491,7 +491,7 @@ justifyLeft :: Int -> Chr -> Str -> Str
 --
 -- > justifyRight 7 'x' "bar"    == "xxxxbar"
 -- > justifyRight 3 'x' "foobar" == "foobar"
-justifyRight :: Int -> Chr -> Str -> Str
+justifyRight :: Index -> Chr -> Str -> Str
 
 -- | /O(n)/ Center a string to the given length, using the specified
 -- fill character on either side.  Performs replacement on invalid
@@ -500,7 +500,7 @@ justifyRight :: Int -> Chr -> Str -> Str
 -- Examples:
 --
 -- > center 8 'x' "HS" = "xxxHSxxx"
-center :: Int -> Chr -> Str -> Str
+center :: Index -> Chr -> Str -> Str
 
 -- --------------------------------------------------------------------
 -- Reducing strings (folds)
@@ -915,7 +915,7 @@ splitWhen :: (Chr -> Bool) -> Str -> [Str]
 --
 -- > chunksOf 3 "foobarbaz"   == ["foo","bar","baz"]
 -- > chunksOf 4 "haskell.org" == ["hask","ell.","org"]
-chunksOf :: Int -> Str -> [Str]
+chunksOf :: Index -> Str -> [Str]
 
 -- ---------------------------------------------------------------------
 -- Breaking into lines and words
