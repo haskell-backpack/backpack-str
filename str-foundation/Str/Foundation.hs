@@ -165,7 +165,7 @@ module Str.Foundation (
     -- sort,
 
     -- * Copying strings
-    copy,
+    -- copy,
 
     -- * Using as CString
     -- packCString,
@@ -608,15 +608,6 @@ zip = F.zip
 --
 zipWith :: (Chr -> Chr -> a) -> Str -> Str -> [a]
 zipWith = F.zipWith
-
--- ---------------------------------------------------------------------
--- Copying Strs
---
-
--- | Ensure that two strings do not share buffer
---
-copy :: Str -> Str
-copy = pack . unpack -- inefficient for now
 
 -- --------------------------------------------------------------------
 -- Interpreting Str as an operating system string
