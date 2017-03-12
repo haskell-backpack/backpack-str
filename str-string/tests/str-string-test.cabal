@@ -1,0 +1,25 @@
+name:                str-string-test
+version:             0.0
+synopsis:            Tests for str-string (using Backpack features)
+license:             BSD3
+author:              Edward Z. Yang
+maintainer:          ezyang@cs.stanford.edu
+category:            Data
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >= 1.25
+
+library string-sig
+  signatures:          Str
+  reexported-modules:  Prelude
+  build-depends:       base >= 4.9, str-v1
+  default-language:    Haskell2010
+
+test-suite implements
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  build-depends:
+    base,
+    string-sig,
+    str-string
+  default-language:    Haskell2010

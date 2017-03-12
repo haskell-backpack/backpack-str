@@ -4,3 +4,5 @@ packages:
     -- str-bytestring
     str-text
     str-text/tests
+    str-string
+    str-string/tests

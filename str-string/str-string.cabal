@@ -1,0 +1,20 @@
+name:                str-string
+version:             0.1.0.0
+synopsis:            Adaptor modules for String which implement the Str signature
+description:         Adaptor modules for String which provide a type named
+                     Str and can be used to fill packages parametrized
+                     by str-sig.
+license:             BSD3
+license-file:        LICENSE
+author:              Edward Z. Yang
+maintainer:          ezyang@cs.stanford.edu
+category:            Data
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >= 1.20
+
+library
+  exposed-modules:     Str.String
+  reexported-modules:  Str.String as Str
+  build-depends:       base >= 4.9
+  default-language:    Haskell2010
