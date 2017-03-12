@@ -1,5 +1,5 @@
 {-# LANGUAGE Trustworthy #-}
-module Str.ByteString (
+module Str.ByteString.Char8 (
     -- * String types
     Str,
     Chr,
@@ -116,10 +116,10 @@ module Str.ByteString (
     -- chunksOf,
 
     -- * Breaking into lines and words
-    -- lines,
-    -- unlines,
-    -- words,
-    -- unwords,
+    lines,
+    unlines,
+    words,
+    unwords,
 
     -- * Predicates
     isPrefixOf,
@@ -141,7 +141,7 @@ module Str.ByteString (
     -- * Searching with a predicate
     find,
     filter,
-    partition,
+    -- partition,
     -- breakOnAll,
 
     -- * Indexing 'Str's
@@ -176,21 +176,21 @@ module Str.ByteString (
     packOSString,
 
     -- * Reading from Str
-    -- readInt,
-    -- readInteger,
+    readInt,
+    readInteger,
 ) where
 
-import Prelude (Int, IO, Monad(..), Bool, Num(..), ($))
+import Prelude (Int, IO, Monad(..), Bool, Num(..), ($), Char)
 import Foreign.C.String (CString)
 import Foreign.Marshal.Alloc
 import Foreign.Marshal.Utils
 import Foreign.Storable
-import Data.ByteString
+import Data.ByteString.Char8
 import Data.ByteString.Unsafe
 import Data.Word (Word8)
 
 type Str = ByteString
-type Chr = Word8
+type Chr = Char
 type Index = Int
 
 useAsOSString :: Str -> (CString -> IO a) -> IO a

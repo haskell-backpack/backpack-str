@@ -1,5 +1,4 @@
-{-# LANGUAGE Trustworthy #-}
-module Str.ByteString (
+signature StrChar8 (
     -- * String types
     Str,
     Chr,
@@ -116,10 +115,10 @@ module Str.ByteString (
     -- chunksOf,
 
     -- * Breaking into lines and words
-    -- lines,
-    -- unlines,
-    -- words,
-    -- unwords,
+    lines,
+    unlines,
+    words,
+    unwords,
 
     -- * Predicates
     isPrefixOf,
@@ -141,7 +140,7 @@ module Str.ByteString (
     -- * Searching with a predicate
     find,
     filter,
-    partition,
+    -- partition,
     -- breakOnAll,
 
     -- * Indexing 'Str's
@@ -176,49 +175,8 @@ module Str.ByteString (
     packOSString,
 
     -- * Reading from Str
-    -- readInt,
-    -- readInteger,
+    readInt,
+    readInteger,
 ) where
 
-import Prelude (Int, IO, Monad(..), Bool, Num(..), ($))
-import Foreign.C.String (CString)
-import Foreign.Marshal.Alloc
-import Foreign.Marshal.Utils
-import Foreign.Storable
-import Data.ByteString
-import Data.ByteString.Unsafe
-import Data.Word (Word8)
-
-type Str = ByteString
-type Chr = Word8
-type Index = Int
-
-useAsOSString :: Str -> (CString -> IO a) -> IO a
-useAsOSString = useAsCString
-
-newOSString   :: Str -> IO CString
-newOSString s = unsafeUseAsCStringLen s $ \(c,l) -> do
-                    p <- mallocBytes (l+1)
-                    copyBytes p c l
-                    pokeByteOff p l (0::Word8)
-                    return p
-
-packOSString  :: CString -> IO Str
-packOSString  = packCString
-
-breakOn :: Str -> Str -> (Str, Str)
-breakOn = breakSubstring
-
-splitWhen :: (Chr -> Bool) -> Str -> [Str]
-splitWhen = splitWith
-
--- | /O(n)/ elemCount returns the number of times its argument appears in the Str
---
--- > elemCount = length . elemIndices
---
-elemCount = count
-
-cons' :: Chr -> Str -> Str
-cons' = cons
-
-infixr 5 `cons'`
+import Prelude ()

@@ -15,6 +15,13 @@ library bytestring-sig
   build-depends:       base >= 4.9, str-sig
   default-language:    Haskell2010
 
+library bytestring-char8-sig
+  signatures:          StrChar8
+  reexported-modules:  Prelude
+  build-depends:       base >= 4.9, str-sig
+  mixins:              str-sig requires (Str as StrChar8)
+  default-language:    Haskell2010
+
 test-suite implements
   type:                exitcode-stdio-1.0
   main-is:             Main.hs
@@ -22,4 +29,14 @@ test-suite implements
     base,
     bytestring-sig,
     str-bytestring
+  default-language:    Haskell2010
+
+test-suite implements-char8
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  build-depends:
+    base,
+    bytestring-char8-sig,
+    str-bytestring
+  mixins: str-bytestring (Str.ByteString.Char8 as StrChar8)
   default-language:    Haskell2010
