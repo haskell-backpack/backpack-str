@@ -192,6 +192,8 @@ type Index = Int64
 cons' :: Chr -> Str -> Str
 cons' = cons
 
+infixr 5 `cons'`
+
 splitWhen :: (Chr -> Bool) -> Str -> [Str]
 splitWhen = split
 

@@ -227,10 +227,14 @@ unpack = id
 cons :: Char -> Str -> Str
 cons = (:)
 
+infixr 5 `cons`
+
 -- | Lazy /O(n)/ Append a character onto the end of a 'Str'.
 --
 snoc :: Str -> Char -> Str
 snoc s c = s ++ [c]
+
+infixl 5 `snoc`
 
 -- | Lazy /O(n)/ Append two strings.  If the first string is not finite, the result
 -- is the first string.  This operation is expected to coincide with

@@ -285,6 +285,8 @@ unpack :: Str -> [Chr]
 --
 cons :: Chr -> Str -> Str
 
+infixr 5 `cons`
+
 -- | /O(n)/ Unlike 'cons', 'cons\'' is strict in the Str that we are
 -- consing onto, allowing for the possibility that the new 'Chr' can be
 -- coalesced into the string.  This may be as expensive as performing a
@@ -293,6 +295,8 @@ cons :: Chr -> Str -> Str
 -- implementation.
 --
 cons' :: Chr -> Str -> Str
+
+infixr 5 `cons'`
 
 -- | /O(n)/ Append a character onto the end of a 'Str'.
 --
