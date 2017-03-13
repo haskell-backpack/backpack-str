@@ -173,6 +173,15 @@ existing implementations:
 If you think your method is of general interest, submit a PR to
 str-sig!
 
+**How can I help?** As you can tell in the feature matrix below, certain
+operations on `Str` are not widely supported among the implementations.
+Contributing tests and efficient implementations (the tests are
+important) to upstream or this package would be greatly appreciated.
+
+Note that some operations are not efficiently implementable, or not
+implementable at all, on certain string representations, so full feature
+parity is not achievable.
+
 ## Feature matrix
 
 Although eventually we would like to have feature parity among
