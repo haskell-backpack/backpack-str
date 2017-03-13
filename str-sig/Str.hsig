@@ -159,7 +159,7 @@ signature Str (
     packZipWith,
     unzip,
 
-    -- * Ordered Strs
+    -- * Ordered strings
     sort,
 
     -- * Copying strings
@@ -179,7 +179,7 @@ signature Str (
     readInteger,
 ) where
 
--- Constructed by merging the APIs of bytestring and text.
+-- Initially constructed by merging the APIs of bytestring-0.10.8.1 and text-1.2.2.1.
 
 import Prelude (Show, Real, Read, Num, Integral, Enum, Ord, Eq, Monoid,
                 Integer, Maybe, Int, IO, Bool, Ordering)
