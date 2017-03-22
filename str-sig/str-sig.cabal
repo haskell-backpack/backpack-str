@@ -1,5 +1,5 @@
 name:                str-sig
-version:             0.1.0.0
+version:             0.1.0.1
 synopsis:            Signature package for String-like types.
 description:         This package provides a Str signature which defines
                      common namespace of functionality provided by
