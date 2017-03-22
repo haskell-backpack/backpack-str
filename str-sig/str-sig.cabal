@@ -19,7 +19,7 @@ author:              Edward Z. Yang
 maintainer:          ezyang@cs.stanford.edu
 category:            Signature
 build-type:          Simple
-extra-source-files:  ChangeLog.md
+extra-source-files:  ChangeLog.md, README.md
 cabal-version:       >= 1.25
 
 library
