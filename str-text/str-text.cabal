@@ -18,6 +18,8 @@ library
                        Str.Text.Lazy
   if impl(ghc >= 7.9)
     reexported-modules:  Str.Text as Str
+  -- 1.2.1 for repeat/cycle/iterate
+  -- 1.2.2 for takeWhileEnd
   build-depends:       base >= 4.7 && < 4.11,
-                       text >= 1.2 && < 1.3
+                       text >= 1.2.2 && < 1.3
   default-language:    Haskell2010
