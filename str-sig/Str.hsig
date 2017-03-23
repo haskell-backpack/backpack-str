@@ -194,7 +194,7 @@ import Data.Ix          (Ix)
 -- encoded, and may or may not be packed.
 --
 -- Examples of types which fulfill this signature are 'String',
--- strict/lazy Chr/Char8 'Str' and strict/lazy 'Text',
+-- strict\/lazy Chr\/Char8 'Str' and strict\/lazy 'Text',
 -- but not all operations are supported by all string types.
 --
 -- The interpretation of operations which interact with 'CString' (NUL
@@ -591,8 +591,6 @@ minimum :: Str -> Chr
 -- reduced values from the left.
 --
 scanl :: (Chr -> Chr -> Chr) -> Chr -> Str -> Str
-
--- Not implemented for Lazy Str
 
 -- | 'scanl1' is a variant of 'scanl' that has no starting value argument.
 --
