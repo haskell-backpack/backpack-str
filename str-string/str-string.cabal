@@ -15,6 +15,8 @@ cabal-version:       >= 1.20
 
 library
   exposed-modules:     Str.String
-  reexported-modules:  Str.String as Str
-  build-depends:       base >= 4.9
+  -- Lower bound due to use of 'newFilePath'
+  build-depends:       base >= 4.7 && < 4.11
+  if impl(ghc >= 7.9)
+    reexported-modules:  Str.String as Str
   default-language:    Haskell2010
