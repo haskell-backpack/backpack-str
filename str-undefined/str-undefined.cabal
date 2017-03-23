@@ -1,0 +1,33 @@
+name:                str-undefined
+version:             0.1.0.0
+synopsis:            Str transformer which fills in all implementations with undefined
+description:         This package, once instantiated with types for Str, Chr and Index,
+                     provides undefined (i.e., will fail at runtime) implementations of
+                     all of the functions defined by str-sig.
+license:             BSD3
+license-file:        LICENSE
+author:              Edward Z. Yang
+maintainer:          ezyang@cs.stanford.edu
+category:            Data
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >= 2.0
+
+library
+  signatures:          Str
+  exposed-modules:     Str.Undefined
+  build-depends:       base >= 4.10 && < 4.11,
+                       str-sig >= 0.1
+  default-language:    Haskell2010
+
+test-suite implements
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  build-depends:
+    base,
+    str-sig,
+    str-undefined,
+    str-string
+  mixins: str-undefined (Str.Undefined as Str) requires (Str as Str.String),
+          str-string (Str.String)
+  default-language:    Haskell2010

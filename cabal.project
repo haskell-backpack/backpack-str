@@ -6,3 +6,4 @@ packages:
     str-text/tests
     str-string
     str-string/tests
+    str-undefined
