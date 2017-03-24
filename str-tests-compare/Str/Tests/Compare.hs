@@ -7,14 +7,20 @@ module Str.Tests.Compare (tests) where
 
 import Test.QuickCheck
 import Test.QuickCheck.Property
+import Test.QuickCheck.Monadic
 import Test.Framework
 import Test.Framework.Providers.QuickCheck2
 import Text.Show.Functions
 
 import Control.Exception
+import Control.Monad
+import Foreign.C.String
+import Foreign.Marshal.Alloc
 
 import qualified AStr as A
 import qualified BStr as B
+
+-- TODO: Audit handling of Unicode/non-ASCII test input
 
 type X = Int
 
@@ -37,6 +43,8 @@ instance Model a b => Model (Maybe a) (Maybe b) where
     model = fmap model
 instance (Model f g, Model a b) => Model (f, a) (g, b) where
     model (a,b) = (model a, model b)
+instance (Model f g, Model x y, Model a b) => Model (f, x, a) (g, y, b) where
+    model (a,b,c) = (model a, model b, model c)
 instance Model a b => Model [a] [b] where
     model = fmap model
 instance (Model g f, Model a b) => Model (f -> a) (g -> b) where
@@ -86,13 +94,15 @@ instance IsNull A.Str where isNull = A.null
 -- -------------------------------------------------------------
 -- The properties
 
+-- TODO: improve generators when it matters
+
 tests =
     -- Instances
     [ testProperty "compare"    $ compare @A.Str    `eq2` compare @B.Str
     , testProperty "eq"         $ (==) @A.Str       `eq2` (==) @B.Str
 
     -- Introducing and eliminating strings
-    , testProperty "empty"      $ A.empty           `eq0` B.empty
+    , testProperty "empty"      $ A.empty     `eq0` B.empty
     , testProperty "singleton"  $ A.singleton `eq1`   B.singleton
     , testProperty "pack"       $ A.pack      `eq1`   B.pack
     , testProperty "unpack"     $ A.unpack    `eq1`   B.unpack
@@ -161,37 +171,48 @@ tests =
     , testProperty "mapAccumR" $ A.mapAccumR @X `eq3` B.mapAccumR @X
 
     -- Infinite strings
-    -- NB: don't just eq these!
-    -- repeat
-    -- cycle
-    -- iterate
+    , testProperty "repeat" $ forAll arbitrarySizedIntegral $
+                              (\n -> A.take n . A.repeat) `eq2`
+                              (\n -> B.take n . B.repeat)
+    , testProperty "cycle" $ \s -> not (isNull s) ==>
+                             forAll arbitrarySizedIntegral $
+                             (\n -> A.take n $ A.cycle s) `eq1`
+                             (\n -> B.take n $ B.cycle (model s))
+    , testProperty "iterate" $ forAll arbitrarySizedIntegral $
+                              (\n f -> A.take n . A.iterate f) `eq3`
+                              (\n g -> B.take n . B.iterate g)
 
     -- Unfolds and replicates
     , testProperty "replicate" $ forAll arbitrarySizedIntegral $
                                  A.replicate `eq2` B.replicate
-    -- concatReplicate
-    -- unfoldr
-    -- unfoldrN
+    , testProperty "concatReplicate" $ forAll arbitrarySizedIntegral $
+                                 A.concatReplicate `eq2` B.concatReplicate
+    , let f :: a -> X -> Maybe (a, X) -- hand-coded, terminating unfoldr
+          f c x | x <= 0    = Nothing
+                | otherwise = Just (c, x-1)
+      in testProperty "unfoldr" $ (\n c -> A.take n . A.unfoldr @X (f c)) `eq3`
+                                  (\n c -> B.take n . B.unfoldr @X (f c))
+    , testProperty "unfoldrN" $ A.unfoldrN @X `eq3` B.unfoldrN @X
 
     -- Substrings: Breaking strings
     , testProperty "take"        $ A.take   `eq2`  B.take
-    -- takeEnd
+    , testProperty "takeEnd"        $ A.takeEnd   `eq2`  B.takeEnd
     , testProperty "drop"        $ A.drop   `eq2`  B.drop
-    -- dropEnd
+    , testProperty "dropEnd"        $ A.dropEnd   `eq2`  B.dropEnd
     , testProperty "splitAt"     $ A.splitAt `eq2`  B.splitAt
     , testProperty "takeWhile"   $ A.takeWhile             `eq2`  B.takeWhile
-    -- takeWhileEnd
+    , testProperty "takeWhileEnd"   $ A.takeWhileEnd          `eq2`  B.takeWhileEnd
     , testProperty "dropWhile"   $ A.dropWhile             `eq2`  B.dropWhile
-    -- dropWhileEnd
-    -- stripStart
-    -- stripEnd
-    -- strip
+    , testProperty "dropWhileEnd"   $ A.dropWhileEnd          `eq2`  B.dropWhileEnd
+    , testProperty "stripStart" $ A.stripStart `eq1` B.stripStart
+    , testProperty "stripEnd" $ A.stripEnd `eq1` B.stripEnd
+    , testProperty "strip" $ A.strip `eq1` B.strip
     , testProperty "span"        $ A.span                  `eq2`  B.span
-    -- spanEnd
+    , testProperty "spanEnd"        $ A.spanEnd               `eq2`  B.spanEnd
     , testProperty "break"       $ A.break       `eq2`  B.break
-    -- breakEnd
-    -- breakOn
-    -- breakOnEnd
+    , testProperty "breakEnd"    $ A.breakEnd    `eq2`  B.breakEnd
+    , testProperty "breakOn"     $ A.breakOn     `eq2`  B.breakOn
+    , testProperty "breakOnEnd"  $ A.breakOnEnd  `eq2`  B.breakOnEnd
     , testProperty "group"       $ A.group       `eq1`  B.group
     , testProperty "groupBy"     $ A.groupBy     `eq2`  B.groupBy
     , testProperty "inits"       $ A.inits       `eq1`  B.inits
@@ -201,73 +222,104 @@ tests =
 
     -- Substrings: Breaking into many substrings
     , testProperty "splitOn"     $ A.splitOn               `eq2`  B.splitOn
-    -- splitWhen
-    -- chunksOf
+    , testProperty "splitWhen"   $ A.splitWhen             `eq2`  B.splitWhen
+    , testProperty "chunksOf"    $ A.chunksOf              `eq2`  B.chunksOf
 
     -- Breaking into lines and words
-    , testProperty "lines"       $ A.lines                `eq1`  B.lines
-    -- unlines
-    -- words
-    -- unwords
+    , testProperty "lines"   $ A.lines   `eq1`  B.lines
+    , testProperty "unlines" $ A.unlines `eq1` B.unlines
+    , testProperty "words"   $ A.words   `eq1`  B.words
+    , testProperty "unwords" $ A.unwords `eq1` B.unwords
 
     -- Predicates
-    , testProperty "isPrefixOf" $ A.isPrefixOf            `eq2`  B.isPrefixOf
-    , testProperty "isSuffixOf" $ A.isSuffixOf            `eq2`  B.isSuffixOf
-    , testProperty "isInfixOf"  $ A.isInfixOf  `eq2`    B.isInfixOf
+    , testProperty "isPrefixOf" $ A.isPrefixOf `eq2`  B.isPrefixOf
+    , testProperty "isSuffixOf" $ A.isSuffixOf `eq2`  B.isSuffixOf
+    , testProperty "isInfixOf"  $ A.isInfixOf  `eq2`  B.isInfixOf
 
     -- View patterns
-    -- commonPrefixes
+    , testProperty "commonPrefixes" $ A.commonPrefixes `eq2` B.commonPrefixes
 
     -- Search for arbitrary substrings
-    -- breakSubstring
-    -- findSubstring
-    -- findSubstrings
+    , testProperty "breakSubstring" $ A.breakSubstring `eq2` B.breakSubstring
+    , testProperty "findSubstring"  $ A.findSubstring  `eq2` B.findSubstring
+    , testProperty "findSubstrings" $ A.findSubstrings `eq2` B.findSubstrings
 
     -- Searching by equality
     , testProperty "elem"      $ A.elem                  `eq2`  B.elem
     , testProperty "notElem"   $ A.notElem               `eq2`  B.notElem
 
     -- Searching by predicate
-    , testProperty "find"      $ A.find                  `eq2`  B.find
-    , testProperty "filter"    $ A.filter                `eq2`  B.filter
-    , testProperty "partition" $ A.partition  `eq2`    B.partition
-    -- breakOnAll
+    , testProperty "find"       $ A.find       `eq2`  B.find
+    , testProperty "filter"     $ A.filter     `eq2`  B.filter
+    , testProperty "partition"  $ A.partition  `eq2`    B.partition
+    , testProperty "breakOnAll" $ A.breakOnAll `eq2` B.breakOnAll
 
     -- Indexing Strs
-    -- index
-    -- , testProperty "findIndex"   prop_findIndex
-    -- , testProperty "findIndices" prop_findIndices
-    -- elemIndexEnd
-    -- , testProperty "unfoldr"     prop_unfoldr
-    -- , testProperty "iterate"     prop_iterate
-    -- , testProperty "repeat"      prop_repeat
-    -- , testProperty "elemIndex"   prop_elemIndex
-    -- , testProperty "elemIndices" prop_elemIndices
-    -- substringCount
+    , testProperty "index" $ \s ->
+                             forAll (choose (0, fromIntegral (A.length s) - 1 :: Integer)) $ \i ->
+                                (flip A.index (fromIntegral i) `eqnotnull1`
+                                 flip B.index (fromIntegral i)) s
+    , testProperty "elemIndex"    $ A.elemIndex    `eq2` B.elemIndex
+    , testProperty "elemIndices"  $ A.elemIndices  `eq2` B.elemIndices
+    , testProperty "elemIndexEnd" $ A.elemIndexEnd `eq2` B.elemIndexEnd
+    , testProperty "substringCount" $ A.substringCount `eq2` B.substringCount
+    , testProperty "findIndex"    $ A.findIndex    `eq2` B.findIndex
+    , testProperty "findIndices"  $ A.findIndices  `eq2` B.findIndices
 
     -- Zipping and unzipping
     , testProperty "zip"     $ A.zip        `eq2`   B.zip
     , testProperty "zipWith" $ A.zipWith @X `eq3` B.zipWith @X
-    -- packZipWith
+    , testProperty "packZipWith" $ A.packZipWith `eq3` B.packZipWith
     , testProperty "unzip"   $ A.unzip      `eq1`   B.unzip
 
     -- Ordered Strs
-    -- sort
+    , testProperty "sort" $ A.sort `eq1` B.sort
 
     -- Copying Strs
-    -- copy
+    , testProperty "copy" $ A.copy `eq1` B.copy
 
     -- Using Strs as 'CString's
-    -- packCString
-    -- packCStringLen
+    , testProperty "packCString" . monadicIO $ do
+        s <- pick arbitrary
+        run $
+          withCString s $ \cs ->
+            liftM2 (==) (fmap model (A.packCString cs)) (B.packCString cs) `catch`
+              \(e :: ErrorCall) -> return True
+    , testProperty "packCStringLen" . monadicIO $ do
+        s <- pick arbitrary
+        run $
+          withCStringLen s $ \cs ->
+            liftM2 (==) (fmap model (A.packCStringLen cs)) (B.packCStringLen cs) `catch`
+              \(e :: ErrorCall) -> return True
 
     -- Interpreting Str as an operating system string
-    -- useAsOSString
-    -- newOSString
-    -- packOSString
+    , testProperty "useAsOSString" . monadicIO $ do
+        s <- pick arbitrary
+        run $
+          A.useAsOSString s $ \a ->
+            B.useAsOSString (model s) $ \b -> do
+              -- TODO: would be better to do a byte-for-byte compare
+              sa <- peekCString a
+              sb <- peekCString b
+              return (sa == sb)
+    , testProperty "newOSString" . monadicIO $ do
+        s <- pick arbitrary
+        run $
+          bracket (A.newOSString s) free $ \a ->
+            bracket (B.newOSString (model s)) free $ \b -> do
+              -- TODO: would be better to do a byte-for-byte compare
+              sa <- peekCString a
+              sb <- peekCString b
+              return (sa == sb)
+    , testProperty "packOSString" . monadicIO $ do
+        s <- pick arbitrary
+        run $
+          withCString s $ \cs ->
+            liftM2 (==) (fmap model (A.packOSString cs)) (B.packOSString cs) `catch`
+              \(e :: ErrorCall) -> return True
 
     -- Reading from Str
     , testProperty "readInt"   $ A.readInt              `eq1`  B.readInt
-    -- readInteger
+    , testProperty "readInteger" $ A.readInteger `eq1` B.readInteger
 
     ]
