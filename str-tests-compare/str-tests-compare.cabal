@@ -1,0 +1,57 @@
+name:                str-tests-compare
+version:             0.1.0.0
+synopsis:            Testing package for comparing string implementations
+description:         This library when instantiated with two different
+                     string types compares them to see if the act in observably
+                     the same way.
+license:             BSD3
+license-file:        LICENSE
+author:              Edward Z. Yang
+maintainer:          ezyang@cs.stanford.edu
+category:            Data
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >= 2.0
+
+library
+  exposed-modules:     Str.Tests.Compare
+  build-depends:       base >= 4.10 && < 4.11,
+                       QuickCheck >= 2.3,
+                       test-framework,
+                       test-framework-quickcheck2,
+                       str-sig >= 0.1
+  mixins:              str-sig requires (Str as AStr),
+                       str-sig requires (Str as BStr)
+  ghc-options:         -fno-enable-rewrite-rules
+  default-language:    Haskell2010
+
+library insts
+  exposed-modules:     Str.ByteString.Instances
+  hs-source-dirs:      insts
+  build-depends:       base,
+                       bytestring,
+                       QuickCheck
+  default-language:    Haskell2010
+
+library partial
+  exposed-modules:     Str.ByteString.Partial
+  hs-source-dirs:      partial
+  build-depends:       str-undefined,
+                       str-bytestring,
+                       insts,
+                       base
+  mixins:              str-undefined (Str.Undefined as Str.ByteString.Undefined)
+                            requires (Str as Str.ByteString)
+  default-language:    Haskell2010
+
+test-suite bytestring
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  hs-source-dirs:      main
+  build-depends:       str-tests-compare,
+                       partial,
+                       test-framework,
+                       base
+  mixins:              partial (Str.ByteString.Partial as AStr,
+                                Str.ByteString.Partial as BStr)
+  default-language:    Haskell2010

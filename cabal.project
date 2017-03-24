@@ -7,3 +7,6 @@ packages:
     str-string
     str-string/tests
     str-undefined
+    str-tests
+    str-tests-compare
+allow-newer: base
