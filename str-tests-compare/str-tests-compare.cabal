@@ -34,14 +34,17 @@ library insts
   default-language:    Haskell2010
 
 library partial
-  exposed-modules:     Str.ByteString.Partial
+  exposed-modules:     Str.ByteString.Partial,
+                       Str.ByteString.Lazy.Partial
   hs-source-dirs:      partial
   build-depends:       str-undefined,
                        str-bytestring,
                        insts,
                        base
   mixins:              str-undefined (Str.Undefined as Str.ByteString.Undefined)
-                            requires (Str as Str.ByteString)
+                            requires (Str as Str.ByteString),
+                       str-undefined (Str.Undefined as Str.ByteString.Lazy.Undefined)
+                            requires (Str as Str.ByteString.Lazy)
   default-language:    Haskell2010
 
 test-suite bytestring
@@ -52,6 +55,6 @@ test-suite bytestring
                        partial,
                        test-framework,
                        base
-  mixins:              partial (Str.ByteString.Partial as AStr,
+  mixins:              partial (Str.ByteString.Lazy.Partial as AStr,
                                 Str.ByteString.Partial as BStr)
   default-language:    Haskell2010
