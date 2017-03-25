@@ -642,14 +642,18 @@ dropLengthMaybe (_:x') (_:y') = dropLengthMaybe x' y'
 -- > splitWhen (=='a') "aabbaca" == ["","","bb","c",""]
 -- > splitWhen (=='a') []        == []
 --
--- The resulting 'Str's MAY retain the input argument.
+-- The resulting 'Str's MAY retain the input argument.  This function
+-- is sometimes known as @splitWith@.
 --
 splitWhen :: (Char -> Bool) -> Str -> [Str]
-splitWhen p s =
-    let (pre, post) = break p s
-    in case post of
-        []     -> [pre]
-        (_:s') -> pre : splitWhen p s'
+splitWhen _ [] = [] -- special case for empty list
+splitWhen p0 s0 = go p0 s0
+  where
+    go p s =
+        let (pre, post) = break p s
+        in case post of
+            []     -> [pre]
+            (_:s') -> pre : go p s'
 
 -- ---------------------------------------------------------------------
 -- Predicates

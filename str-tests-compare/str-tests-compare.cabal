@@ -34,20 +34,30 @@ library insts
   default-language:    Haskell2010
 
 library partial
-  exposed-modules:     Str.ByteString.Partial,
+  exposed-modules:     Str.ByteString.Partial
+                       Str.ByteString.Char8.Partial
+                       Str.ByteString.Lazy.Char8.Partial
                        Str.ByteString.Lazy.Partial
+                       Str.String.Partial
   hs-source-dirs:      partial
   build-depends:       str-undefined,
                        str-bytestring,
+                       str-string,
                        insts,
                        base
   mixins:              str-undefined (Str.Undefined as Str.ByteString.Undefined)
                             requires (Str as Str.ByteString),
+                       str-undefined (Str.Undefined as Str.ByteString.Char8.Undefined)
+                            requires (Str as Str.ByteString.Char8),
                        str-undefined (Str.Undefined as Str.ByteString.Lazy.Undefined)
-                            requires (Str as Str.ByteString.Lazy)
+                            requires (Str as Str.ByteString.Lazy),
+                       str-undefined (Str.Undefined as Str.ByteString.Lazy.Char8.Undefined)
+                            requires (Str as Str.ByteString.Lazy.Char8),
+                       str-undefined (Str.Undefined as Str.String.Undefined)
+                            requires (Str as Str.String)
   default-language:    Haskell2010
 
-test-suite bytestring
+test-suite bl-b
   type:                exitcode-stdio-1.0
   main-is:             Main.hs
   hs-source-dirs:      main
@@ -57,4 +67,28 @@ test-suite bytestring
                        base
   mixins:              partial (Str.ByteString.Lazy.Partial as AStr,
                                 Str.ByteString.Partial as BStr)
+  default-language:    Haskell2010
+
+test-suite blc-bl
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  hs-source-dirs:      main
+  build-depends:       str-tests-compare,
+                       partial,
+                       test-framework,
+                       base
+  mixins:              partial (Str.ByteString.Lazy.Char8.Partial as AStr,
+                                Str.ByteString.Char8.Partial as BStr)
+  default-language:    Haskell2010
+
+test-suite b-s
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  hs-source-dirs:      main
+  build-depends:       str-tests-compare,
+                       partial,
+                       test-framework,
+                       base
+  mixins:              partial (Str.ByteString.Char8.Partial as AStr,
+                                Str.String.Partial as BStr)
   default-language:    Haskell2010

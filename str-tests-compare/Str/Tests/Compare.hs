@@ -59,27 +59,16 @@ instance (Model g f, Model a b) => Model (f -> a) (g -> b) where
 -- tricks. See here: http://okmij.org/ftp/Haskell/vararg-fn.lhs
 --
 
-eq0 f g =
+eqG x y =
+  counterexample ("A says: " ++ show x ++ ", B says: " ++ show y) $
   ioProperty $
-    evaluate (model f == g)
-        `catch`
-    \(e :: ErrorCall) -> return True
-
-eq1 f g = \a         ->
-  ioProperty $
-    evaluate (model (f a) == g (model a))
-        `catch`
-    \(e :: ErrorCall) -> return True
-eq2 f g = \a b       ->
-  ioProperty $
-    evaluate (model (f a b) == g (model a) (model b))
-        `catch`
-    \(e :: ErrorCall) -> return True
-eq3 f g = \a b c     ->
-  ioProperty $
-    evaluate (model (f a b c)     == g (model a) (model b) (model c))
-        `catch`
-    \(e :: ErrorCall) -> return True
+     evaluate (x == y)
+         `catch` -- Suppress error when the function was not implemented
+     \(e :: ErrorCall) -> return True
+eq0 f g =           model f         `eqG` g
+eq1 f g = \a     -> model (f a)     `eqG` g (model a)
+eq2 f g = \a b   -> model (f a b)   `eqG` g (model a) (model b)
+eq3 f g = \a b c -> model (f a b c) `eqG` g (model a) (model b) (model c)
 
 --
 -- And for functions that take non-null input
