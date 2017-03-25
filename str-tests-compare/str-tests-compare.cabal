@@ -27,9 +27,11 @@ library
 
 library insts
   exposed-modules:     Str.ByteString.Instances
+                       Str.Text.Instances
   hs-source-dirs:      insts
   build-depends:       base,
                        bytestring,
+                       text,
                        QuickCheck
   default-language:    Haskell2010
 
@@ -39,10 +41,12 @@ library partial
                        Str.ByteString.Lazy.Char8.Partial
                        Str.ByteString.Lazy.Partial
                        Str.String.Partial
+                       Str.Text.Partial
   hs-source-dirs:      partial
   build-depends:       str-undefined,
                        str-bytestring,
                        str-string,
+                       str-text,
                        insts,
                        base
   mixins:              str-undefined (Str.Undefined as Str.ByteString.Undefined)
@@ -54,7 +58,11 @@ library partial
                        str-undefined (Str.Undefined as Str.ByteString.Lazy.Char8.Undefined)
                             requires (Str as Str.ByteString.Lazy.Char8),
                        str-undefined (Str.Undefined as Str.String.Undefined)
-                            requires (Str as Str.String)
+                            requires (Str as Str.String),
+                       str-undefined (Str.Undefined as Str.Text.Undefined)
+                            requires (Str as Str.Text),
+                       str-undefined (Str.Undefined as Str.Text.Lazy.Undefined)
+                            requires (Str as Str.Text.Lazy)
   default-language:    Haskell2010
 
 test-suite bl-b
@@ -90,5 +98,17 @@ test-suite b-s
                        test-framework,
                        base
   mixins:              partial (Str.ByteString.Char8.Partial as AStr,
+                                Str.String.Partial as BStr)
+  default-language:    Haskell2010
+
+test-suite t-s
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  hs-source-dirs:      main
+  build-depends:       str-tests-compare,
+                       partial,
+                       test-framework,
+                       base
+  mixins:              partial (Str.Text.Partial as AStr,
                                 Str.String.Partial as BStr)
   default-language:    Haskell2010

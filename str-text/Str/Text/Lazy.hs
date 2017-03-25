@@ -183,7 +183,8 @@ import Prelude (Char, Int, Bool, IO, fmap)
 import System.Posix.Internals (CFilePath, newFilePath, withFilePath, peekFilePath)
 import Data.Int (Int64)
 
-import Data.Text.Lazy
+import Data.Text.Lazy hiding (snoc)
+import qualified Data.Text.Lazy as TL
 
 type Str = Text
 type Chr = Char
@@ -193,6 +194,11 @@ cons' :: Chr -> Str -> Str
 cons' = cons
 
 infixr 5 `cons'`
+
+snoc :: Str -> Chr -> Str
+snoc = TL.snoc
+
+infixl 5 `snoc`
 
 splitWhen :: (Chr -> Bool) -> Str -> [Str]
 splitWhen = split
