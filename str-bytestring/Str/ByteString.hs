@@ -112,7 +112,7 @@ module Str.ByteString (
 
     -- * Substrings: Breaking into many substrings
     -- splitOn,
-    splitWhen,
+    -- splitWhen,
     -- chunksOf,
 
     -- * Breaking into lines and words
@@ -209,8 +209,9 @@ packOSString  = packCString
 breakOn :: Str -> Str -> (Str, Str)
 breakOn = breakSubstring
 
-splitWhen :: (Chr -> Bool) -> Str -> [Str]
-splitWhen = splitWith
+-- bytestring's semantics are buggy
+--  splitWhen :: (Chr -> Bool) -> Str -> [Str]
+--  splitWhen = splitWith
 
 -- | /O(n)/ elemCount returns the number of times its argument appears in the Str
 --

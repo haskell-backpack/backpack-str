@@ -111,7 +111,7 @@ module Str.ByteString.Lazy.Char8 (
 
     -- * Substrings: Breaking into many substrings
     -- splitOn,
-    splitWhen,
+    -- splitWhen,
     -- chunksOf,
 
     -- * Breaking into lines and words
@@ -199,8 +199,9 @@ newOSString s = S.newOSString (toStrict s)
 packOSString  :: CString -> IO Str
 packOSString = fmap fromStrict . S.packOSString
 
-splitWhen :: (Chr -> Bool) -> Str -> [Str]
-splitWhen = splitWith
+-- bytestring is buggy
+-- splitWhen :: (Chr -> Bool) -> Str -> [Str]
+-- splitWhen = splitWith
 
 elemCount :: Chr -> Str -> Index
 elemCount = count

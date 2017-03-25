@@ -109,7 +109,7 @@ module Str.ByteString.Char8.Partial (
 
     -- * Substrings: Breaking into many substrings
     splitOn,
-    S.splitWhen,
+    splitWhen,
     chunksOf,
 
     -- * Breaking into lines and words

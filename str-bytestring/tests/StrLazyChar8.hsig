@@ -111,7 +111,7 @@ signature StrLazyChar8 (
 
     -- * Substrings: Breaking into many substrings
     -- splitOn,
-    splitWhen,
+    -- splitWhen,
     -- chunksOf,
 
     -- * Breaking into lines and words

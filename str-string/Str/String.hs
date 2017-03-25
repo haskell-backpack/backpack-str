@@ -640,20 +640,21 @@ dropLengthMaybe (_:x') (_:y') = dropLengthMaybe x' y'
 -- separators result in an empty component in the output.  eg.
 --
 -- > splitWhen (=='a') "aabbaca" == ["","","bb","c",""]
--- > splitWhen (=='a') []        == []
+-- > splitWhen (=='a') []        == [""]
 --
 -- The resulting 'Str's MAY retain the input argument.  This function
 -- is sometimes known as @splitWith@.
 --
+-- bytestring notably special-cases the split of an empty list to
+-- be a zero-length list; we have adopted the text behavior c.f.
+-- https://github.com/haskell/bytestring/issues/56
+--
 splitWhen :: (Char -> Bool) -> Str -> [Str]
-splitWhen _ [] = [] -- special case for empty list
-splitWhen p0 s0 = go p0 s0
-  where
-    go p s =
-        let (pre, post) = break p s
-        in case post of
-            []     -> [pre]
-            (_:s') -> pre : go p s'
+splitWhen p s =
+    let (pre, post) = break p s
+    in case post of
+        []     -> [pre]
+        (_:s') -> pre : splitWhen p s'
 
 -- ---------------------------------------------------------------------
 -- Predicates

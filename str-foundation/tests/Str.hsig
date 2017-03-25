@@ -163,7 +163,7 @@ signature Str (
     -- sort,
 
     -- * Copying strings
-    copy,
+    -- copy,
 
     -- * Using as CString
     -- packCString,
