@@ -33,21 +33,16 @@ library
                             requires (Str as Str.ByteString.Lazy.Char8)
   default-language:    Haskell2010
 
-library shim
-  reexported-modules:  Prelude
-  build-depends:       base, str-sig
-  default-language:    Haskell2010
-
 test-suite implements
   type:                exitcode-stdio-1.0
   main-is:             Main.hs
   build-depends:
     base,
     str-bytestring-partial,
-    shim
+    str-sig
   mixins:
-    shim requires (Str as Str.ByteString.Partial),
-    shim requires (Str as Str.ByteString.Char8.Partial),
-    shim requires (Str as Str.ByteString.Lazy.Partial),
-    shim requires (Str as Str.ByteString.Lazy.Char8.Partial)
+    str-sig requires (Str as Str.ByteString.Partial),
+    str-sig requires (Str as Str.ByteString.Char8.Partial),
+    str-sig requires (Str as Str.ByteString.Lazy.Partial),
+    str-sig requires (Str as Str.ByteString.Lazy.Char8.Partial)
   default-language:    Haskell2010

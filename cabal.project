@@ -7,6 +7,5 @@ packages:
     str-string
     str-string/partial
     str-undefined
-    str-tests
     str-tests-compare
 allow-newer: base
