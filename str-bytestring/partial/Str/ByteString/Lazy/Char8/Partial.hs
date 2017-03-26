@@ -183,4 +183,3 @@ import Prelude ()
 import Str.ByteString.Lazy.Char8
 import qualified Str.ByteString.Lazy.Char8 as S
 import Str.ByteString.Lazy.Char8.Undefined
-import Str.ByteString.Instances ()

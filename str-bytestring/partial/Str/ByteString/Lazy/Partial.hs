@@ -1,4 +1,4 @@
-module Str.ByteString.Char8.Partial (
+module Str.ByteString.Lazy.Partial (
     -- * String types
     Str,
     Chr,
@@ -11,7 +11,7 @@ module Str.ByteString.Char8.Partial (
     S.unpack,
 
     -- * Basic interface
-    cons,
+    S.cons,
     S.cons',
     S.snoc,
     S.append,
@@ -50,9 +50,9 @@ module Str.ByteString.Char8.Partial (
     S.foldl1,
     S.foldl1',
     S.foldr,
-    S.foldr',
+    foldr',
     S.foldr1,
-    S.foldr1',
+    foldr1',
 
     -- * Special folds
     S.concat,
@@ -64,24 +64,24 @@ module Str.ByteString.Char8.Partial (
 
     -- * Building strings
     S.scanl,
-    S.scanl1,
-    S.scanr,
-    S.scanr1,
+    scanl1,
+    scanr,
+    scanr1,
 
     -- * Accumulating maps
     S.mapAccumL,
     S.mapAccumR,
 
     -- * Infinite strings
-    repeat,
-    cycle,
-    iterate,
+    S.repeat,
+    S.cycle,
+    S.iterate,
 
     -- * Unfolds and replicates
     S.replicate,
     concatReplicate,
     S.unfoldr,
-    S.unfoldrN,
+    unfoldrN,
 
     -- * Substrings: Breaking strings
     S.take,
@@ -97,10 +97,10 @@ module Str.ByteString.Char8.Partial (
     stripEnd,
     strip,
     S.span,
-    S.spanEnd,
+    spanEnd,
     S.break,
-    S.breakEnd,
-    S.breakOn,
+    breakEnd,
+    breakOn,
     breakOnEnd,
     S.group,
     S.groupBy,
@@ -113,15 +113,15 @@ module Str.ByteString.Char8.Partial (
     chunksOf,
 
     -- * Breaking into lines and words
-    S.lines,
-    S.unlines,
-    S.words,
-    S.unwords,
+    lines,
+    unlines,
+    words,
+    unwords,
 
     -- * Predicates
     S.isPrefixOf,
     S.isSuffixOf,
-    S.isInfixOf,
+    isInfixOf,
 
     -- * View patterns
     S.stripPrefix,
@@ -129,9 +129,9 @@ module Str.ByteString.Char8.Partial (
     commonPrefixes,
 
     -- * Search for arbitrary substrings
-    S.breakSubstring,
-    S.findSubstring,
-    S.findSubstrings,
+    breakSubstring,
+    findSubstring,
+    findSubstrings,
 
     -- * Searching by equality
     S.elem,
@@ -140,7 +140,7 @@ module Str.ByteString.Char8.Partial (
     -- * Searching with a predicate
     S.find,
     S.filter,
-    partition,
+    S.partition,
     breakOnAll,
 
     -- * Indexing strings
@@ -160,14 +160,14 @@ module Str.ByteString.Char8.Partial (
     S.unzip,
 
     -- * Ordered strings
-    S.sort,
+    sort,
 
     -- * Copying strings
     S.copy,
 
     -- * Using as CString
-    S.packCString,
-    S.packCStringLen,
+    packCString,
+    packCStringLen,
 
     -- * Using as operating system string
     S.useAsOSString,
@@ -175,12 +175,11 @@ module Str.ByteString.Char8.Partial (
     S.packOSString,
 
     -- * Reading integers from strings
-    S.readInt,
-    S.readInteger,
+    readInt,
+    readInteger,
 ) where
 
 import Prelude ()
-import Str.ByteString.Char8
-import qualified Str.ByteString.Char8 as S
-import Str.ByteString.Char8.Undefined
-import Str.ByteString.Instances ()
+import Str.ByteString.Lazy
+import qualified Str.ByteString.Lazy as S
+import Str.ByteString.Lazy.Undefined

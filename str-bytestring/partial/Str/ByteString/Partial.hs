@@ -1,4 +1,4 @@
-module Str.ByteString.Lazy.Partial (
+module Str.ByteString.Partial (
     -- * String types
     Str,
     Chr,
@@ -11,7 +11,7 @@ module Str.ByteString.Lazy.Partial (
     S.unpack,
 
     -- * Basic interface
-    S.cons,
+    cons,
     S.cons',
     S.snoc,
     S.append,
@@ -50,9 +50,9 @@ module Str.ByteString.Lazy.Partial (
     S.foldl1,
     S.foldl1',
     S.foldr,
-    foldr',
+    S.foldr',
     S.foldr1,
-    foldr1',
+    S.foldr1',
 
     -- * Special folds
     S.concat,
@@ -64,24 +64,24 @@ module Str.ByteString.Lazy.Partial (
 
     -- * Building strings
     S.scanl,
-    scanl1,
-    scanr,
-    scanr1,
+    S.scanl1,
+    S.scanr,
+    S.scanr1,
 
     -- * Accumulating maps
     S.mapAccumL,
     S.mapAccumR,
 
     -- * Infinite strings
-    S.repeat,
-    S.cycle,
-    S.iterate,
+    repeat,
+    cycle,
+    iterate,
 
     -- * Unfolds and replicates
     S.replicate,
     concatReplicate,
     S.unfoldr,
-    unfoldrN,
+    S.unfoldrN,
 
     -- * Substrings: Breaking strings
     S.take,
@@ -97,10 +97,10 @@ module Str.ByteString.Lazy.Partial (
     stripEnd,
     strip,
     S.span,
-    spanEnd,
+    S.spanEnd,
     S.break,
-    breakEnd,
-    breakOn,
+    S.breakEnd,
+    S.breakOn,
     breakOnEnd,
     S.group,
     S.groupBy,
@@ -121,7 +121,7 @@ module Str.ByteString.Lazy.Partial (
     -- * Predicates
     S.isPrefixOf,
     S.isSuffixOf,
-    isInfixOf,
+    S.isInfixOf,
 
     -- * View patterns
     S.stripPrefix,
@@ -129,9 +129,9 @@ module Str.ByteString.Lazy.Partial (
     commonPrefixes,
 
     -- * Search for arbitrary substrings
-    breakSubstring,
-    findSubstring,
-    findSubstrings,
+    S.breakSubstring,
+    S.findSubstring,
+    S.findSubstrings,
 
     -- * Searching by equality
     S.elem,
@@ -160,14 +160,14 @@ module Str.ByteString.Lazy.Partial (
     S.unzip,
 
     -- * Ordered strings
-    sort,
+    S.sort,
 
     -- * Copying strings
     S.copy,
 
     -- * Using as CString
-    packCString,
-    packCStringLen,
+    S.packCString,
+    S.packCStringLen,
 
     -- * Using as operating system string
     S.useAsOSString,
@@ -180,7 +180,6 @@ module Str.ByteString.Lazy.Partial (
 ) where
 
 import Prelude ()
-import Str.ByteString.Lazy
-import qualified Str.ByteString.Lazy as S
-import Str.ByteString.Lazy.Undefined
-import Str.ByteString.Instances ()
+import Str.ByteString
+import qualified Str.ByteString as S
+import Str.ByteString.Undefined

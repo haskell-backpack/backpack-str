@@ -1,4 +1,4 @@
-module Str.ByteString.Partial (
+module Str.ByteString.Char8.Partial (
     -- * String types
     Str,
     Chr,
@@ -113,10 +113,10 @@ module Str.ByteString.Partial (
     chunksOf,
 
     -- * Breaking into lines and words
-    lines,
-    unlines,
-    words,
-    unwords,
+    S.lines,
+    S.unlines,
+    S.words,
+    S.unwords,
 
     -- * Predicates
     S.isPrefixOf,
@@ -140,7 +140,7 @@ module Str.ByteString.Partial (
     -- * Searching with a predicate
     S.find,
     S.filter,
-    S.partition,
+    partition,
     breakOnAll,
 
     -- * Indexing strings
@@ -175,12 +175,11 @@ module Str.ByteString.Partial (
     S.packOSString,
 
     -- * Reading integers from strings
-    readInt,
-    readInteger,
+    S.readInt,
+    S.readInteger,
 ) where
 
 import Prelude ()
-import Str.ByteString
-import qualified Str.ByteString as S
-import Str.ByteString.Undefined
-import Str.ByteString.Instances ()
+import Str.ByteString.Char8
+import qualified Str.ByteString.Char8 as S
+import Str.ByteString.Char8.Undefined

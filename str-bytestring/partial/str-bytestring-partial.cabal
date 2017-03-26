@@ -1,0 +1,47 @@
+name:                str-bytestring-partial
+version:             0.1.0.0
+synopsis:            str-bytestring with placeholders for missing implementations
+license:             BSD3
+author:              Edward Z. Yang
+maintainer:          ezyang@cs.stanford.edu
+category:            Data
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >= 1.25
+
+library
+  exposed-modules:     Str.ByteString.Partial
+                       Str.ByteString.Char8.Partial
+                       Str.ByteString.Lazy.Char8.Partial
+                       Str.ByteString.Lazy.Partial
+  build-depends:       str-undefined,
+                       str-bytestring,
+                       base
+  mixins:              str-undefined (Str.Undefined as Str.ByteString.Undefined)
+                            requires (Str as Str.ByteString),
+                       str-undefined (Str.Undefined as Str.ByteString.Char8.Undefined)
+                            requires (Str as Str.ByteString.Char8),
+                       str-undefined (Str.Undefined as Str.ByteString.Lazy.Undefined)
+                            requires (Str as Str.ByteString.Lazy),
+                       str-undefined (Str.Undefined as Str.ByteString.Lazy.Char8.Undefined)
+                            requires (Str as Str.ByteString.Lazy.Char8)
+  default-language:    Haskell2010
+
+library shim
+  reexported-modules:  Prelude
+  build-depends:       base, str-sig
+  default-language:    Haskell2010
+
+test-suite implements
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  build-depends:
+    base,
+    str-bytestring-partial,
+    shim
+  mixins:
+    shim requires (Str as Str.ByteString.Partial),
+    shim requires (Str as Str.ByteString.Char8.Partial),
+    shim requires (Str as Str.ByteString.Lazy.Partial),
+    shim requires (Str as Str.ByteString.Lazy.Char8.Partial)
+  default-language:    Haskell2010

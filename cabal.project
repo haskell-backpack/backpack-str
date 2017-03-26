@@ -1,11 +1,11 @@
 packages:
     str-sig
     str-bytestring
-    str-bytestring/tests
+    str-bytestring/partial
     str-text
-    str-text/tests
+    -- str-text/tests
     str-string
-    str-string/tests
+    -- str-string/tests
     str-undefined
     str-tests
     str-tests-compare
