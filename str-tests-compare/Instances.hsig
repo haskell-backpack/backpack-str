@@ -1,0 +1,13 @@
+signature Instances where
+
+import qualified AStr as A
+import qualified BStr as B
+import Test.QuickCheck
+
+instance Arbitrary A.Str
+instance Arbitrary A.Chr
+instance CoArbitrary A.Chr
+instance Arbitrary A.Index
+
+instance Arbitrary B.Str
+instance Arbitrary B.Index

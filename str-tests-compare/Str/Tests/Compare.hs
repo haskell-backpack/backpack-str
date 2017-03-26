@@ -19,6 +19,7 @@ import Foreign.Marshal.Alloc
 
 import qualified AStr as A
 import qualified BStr as B
+import Instances
 
 -- TODO: Audit handling of Unicode/non-ASCII test input
 

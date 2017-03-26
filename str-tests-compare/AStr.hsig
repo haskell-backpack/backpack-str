@@ -1,9 +1,1 @@
 signature AStr where
-import Test.QuickCheck
-data Str
-data Chr
-data Index
-instance Arbitrary Str
-instance Arbitrary Chr
-instance CoArbitrary Chr
-instance Arbitrary Index

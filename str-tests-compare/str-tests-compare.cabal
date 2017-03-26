@@ -20,13 +20,15 @@ library
                        test-framework,
                        test-framework-quickcheck2,
                        str-sig >= 0.1
+  signatures:          AStr BStr Instances
   mixins:              str-sig requires (Str as AStr),
                        str-sig requires (Str as BStr)
   ghc-options:         -fno-enable-rewrite-rules
   default-language:    Haskell2010
 
 library insts
-  exposed-modules:     Str.ByteString.Instances
+  exposed-modules:     Instances
+                       Str.ByteString.Instances
                        Str.Text.Instances
   hs-source-dirs:      insts
   build-depends:       base,
@@ -35,46 +37,17 @@ library insts
                        QuickCheck
   default-language:    Haskell2010
 
-library partial
-  exposed-modules:     Str.ByteString.Partial
-                       Str.ByteString.Char8.Partial
-                       Str.ByteString.Lazy.Char8.Partial
-                       Str.ByteString.Lazy.Partial
-                       Str.String.Partial
-                       Str.Text.Partial
-  hs-source-dirs:      partial
-  build-depends:       str-undefined,
-                       str-bytestring,
-                       str-string,
-                       str-text,
-                       insts,
-                       base
-  mixins:              str-undefined (Str.Undefined as Str.ByteString.Undefined)
-                            requires (Str as Str.ByteString),
-                       str-undefined (Str.Undefined as Str.ByteString.Char8.Undefined)
-                            requires (Str as Str.ByteString.Char8),
-                       str-undefined (Str.Undefined as Str.ByteString.Lazy.Undefined)
-                            requires (Str as Str.ByteString.Lazy),
-                       str-undefined (Str.Undefined as Str.ByteString.Lazy.Char8.Undefined)
-                            requires (Str as Str.ByteString.Lazy.Char8),
-                       str-undefined (Str.Undefined as Str.String.Undefined)
-                            requires (Str as Str.String),
-                       str-undefined (Str.Undefined as Str.Text.Undefined)
-                            requires (Str as Str.Text),
-                       str-undefined (Str.Undefined as Str.Text.Lazy.Undefined)
-                            requires (Str as Str.Text.Lazy)
-  default-language:    Haskell2010
-
 test-suite bl-b
   type:                exitcode-stdio-1.0
   main-is:             Main.hs
   hs-source-dirs:      main
   build-depends:       str-tests-compare,
-                       partial,
+                       str-bytestring-partial,
+                       insts,
                        test-framework,
                        base
-  mixins:              partial (Str.ByteString.Lazy.Partial as AStr,
-                                Str.ByteString.Partial as BStr)
+  mixins:              str-bytestring-partial (Str.ByteString.Lazy.Partial as AStr,
+                                               Str.ByteString.Partial as BStr)
   default-language:    Haskell2010
 
 test-suite blc-bl
@@ -82,11 +55,12 @@ test-suite blc-bl
   main-is:             Main.hs
   hs-source-dirs:      main
   build-depends:       str-tests-compare,
-                       partial,
+                       str-bytestring-partial,
+                       insts,
                        test-framework,
                        base
-  mixins:              partial (Str.ByteString.Lazy.Char8.Partial as AStr,
-                                Str.ByteString.Char8.Partial as BStr)
+  mixins:              str-bytestring-partial (Str.ByteString.Lazy.Char8.Partial as AStr,
+                                               Str.ByteString.Char8.Partial as BStr)
   default-language:    Haskell2010
 
 test-suite b-s
@@ -94,11 +68,13 @@ test-suite b-s
   main-is:             Main.hs
   hs-source-dirs:      main
   build-depends:       str-tests-compare,
-                       partial,
+                       str-bytestring-partial,
+                       str-string-partial,
+                       insts,
                        test-framework,
                        base
-  mixins:              partial (Str.ByteString.Char8.Partial as AStr,
-                                Str.String.Partial as BStr)
+  mixins:              str-bytestring-partial (Str.ByteString.Char8.Partial as AStr),
+                       str-string-partial     (Str.String.Partial as BStr)
   default-language:    Haskell2010
 
 test-suite t-s
@@ -106,9 +82,11 @@ test-suite t-s
   main-is:             Main.hs
   hs-source-dirs:      main
   build-depends:       str-tests-compare,
-                       partial,
+                       str-text-partial,
+                       str-string-partial,
+                       insts,
                        test-framework,
                        base
-  mixins:              partial (Str.Text.Partial as AStr,
-                                Str.String.Partial as BStr)
+  mixins:              str-text-partial (Str.Text.Partial as AStr),
+                       str-string-partial (Str.String.Partial as BStr)
   default-language:    Haskell2010
