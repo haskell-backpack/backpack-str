@@ -3,7 +3,7 @@ packages:
     str-bytestring
     str-bytestring/partial
     str-text
-    -- str-text/tests
+    str-text/partial
     str-string
     -- str-string/tests
     str-undefined

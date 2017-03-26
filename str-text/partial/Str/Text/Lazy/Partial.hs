@@ -1,4 +1,4 @@
-module Str.Text.Partial (
+module Str.Text.Lazy.Partial (
     -- * String types
     Str,
     Chr,
@@ -73,9 +73,9 @@ module Str.Text.Partial (
     S.mapAccumR,
 
     -- * Infinite strings
-    repeat,
-    cycle,
-    iterate,
+    S.repeat,
+    S.cycle,
+    S.iterate,
 
     -- * Unfolds and replicates
     replicate,
@@ -150,7 +150,7 @@ module Str.Text.Partial (
     elemIndexEnd,
     elemCount,
     S.substringCount,
-    S.findIndex,
+    findIndex,
     findIndices,
 
     -- * Zipping and unzipping
@@ -163,7 +163,7 @@ module Str.Text.Partial (
     sort,
 
     -- * Copying strings
-    S.copy,
+    copy,
 
     -- * Using as CString
     packCString,
@@ -180,7 +180,6 @@ module Str.Text.Partial (
 ) where
 
 import Prelude ()
-import Str.Text
-import qualified Str.Text as S
-import Str.Text.Undefined
-import Str.Text.Instances ()
+import Str.Text.Lazy
+import qualified Str.Text.Lazy as S
+import Str.Text.Lazy.Undefined

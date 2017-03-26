@@ -1,4 +1,4 @@
-module Str.Text.Lazy.Partial (
+module Str.Text.Partial (
     -- * String types
     Str,
     Chr,
@@ -17,13 +17,13 @@ module Str.Text.Lazy.Partial (
     S.append,
     S.head,
     S.uncons,
-    S.unsnoc,
+    unsnoc,
     S.last,
     S.tail,
     S.init,
     S.null,
     S.length,
-    compareLength,
+    S.compareLength,
 
     -- * Transforming strings
     S.map,
@@ -31,18 +31,18 @@ module Str.Text.Lazy.Partial (
     S.intersperse,
     S.intercalate,
     S.transpose,
-    replace,
+    S.replace,
 
     -- * Case conversion
-    toCaseFold,
-    toLower,
-    toUpper,
-    toTitle,
+    S.toCaseFold,
+    S.toLower,
+    S.toUpper,
+    S.toTitle,
 
     -- * Justification
-    justifyLeft,
-    justifyRight,
-    center,
+    S.justifyLeft,
+    S.justifyRight,
+    S.center,
 
     -- * Reducing strings (folds)
     S.foldl,
@@ -50,9 +50,9 @@ module Str.Text.Lazy.Partial (
     S.foldl1,
     S.foldl1',
     S.foldr,
-    S.foldr',
+    foldr',
     S.foldr1,
-    S.foldr1',
+    foldr1',
 
     -- * Special folds
     S.concat,
@@ -78,45 +78,45 @@ module Str.Text.Lazy.Partial (
     iterate,
 
     -- * Unfolds and replicates
-    S.replicate,
-    concatReplicate,
+    replicate,
+    S.concatReplicate,
     S.unfoldr,
-    S.unfoldrN,
+    unfoldrN,
 
     -- * Substrings: Breaking strings
     S.take,
-    takeEnd,
+    S.takeEnd,
     S.drop,
-    dropEnd,
+    S.dropEnd,
     S.splitAt,
     S.takeWhile,
-    takeWhileEnd,
+    S.takeWhileEnd,
     S.dropWhile,
-    dropWhileEnd,
-    stripStart,
-    stripEnd,
-    strip,
+    S.dropWhileEnd,
+    S.stripStart,
+    S.stripEnd,
+    S.strip,
     S.span,
-    S.spanEnd,
+    spanEnd,
     S.break,
-    S.breakEnd,
+    breakEnd,
     S.breakOn,
-    breakOnEnd,
+    S.breakOnEnd,
     S.group,
     S.groupBy,
     S.inits,
     S.tails,
 
     -- * Substrings: Breaking into many substrings
-    splitOn,
+    S.splitOn,
     S.splitWhen,
-    chunksOf,
+    S.chunksOf,
 
     -- * Breaking into lines and words
-    lines,
-    unlines,
-    words,
-    unwords,
+    S.lines,
+    S.unlines,
+    S.words,
+    S.unwords,
 
     -- * Predicates
     S.isPrefixOf,
@@ -126,48 +126,48 @@ module Str.Text.Lazy.Partial (
     -- * View patterns
     S.stripPrefix,
     S.stripSuffix,
-    commonPrefixes,
+    S.commonPrefixes,
 
     -- * Search for arbitrary substrings
-    S.breakSubstring,
-    S.findSubstring,
-    S.findSubstrings,
+    breakSubstring,
+    findSubstring,
+    findSubstrings,
 
     -- * Searching by equality
-    S.elem,
-    S.notElem,
+    elem,
+    notElem,
 
     -- * Searching with a predicate
     S.find,
     S.filter,
     S.partition,
-    breakOnAll,
+    S.breakOnAll,
 
     -- * Indexing strings
     S.index,
-    S.elemIndex,
-    S.elemIndices,
-    S.elemIndexEnd,
-    S.elemCount,
-    substringCount,
+    elemIndex,
+    elemIndices,
+    elemIndexEnd,
+    elemCount,
+    S.substringCount,
     S.findIndex,
-    S.findIndices,
+    findIndices,
 
     -- * Zipping and unzipping
     S.zip,
-    S.zipWith,
-    packZipWith,
-    S.unzip,
+    zipWith,
+    S.packZipWith,
+    unzip,
 
     -- * Ordered strings
-    S.sort,
+    sort,
 
     -- * Copying strings
     S.copy,
 
     -- * Using as CString
-    S.packCString,
-    S.packCStringLen,
+    packCString,
+    packCStringLen,
 
     -- * Using as operating system string
     S.useAsOSString,
@@ -183,4 +183,3 @@ import Prelude ()
 import Str.Text
 import qualified Str.Text as S
 import Str.Text.Undefined
-import Str.Text.Instances ()

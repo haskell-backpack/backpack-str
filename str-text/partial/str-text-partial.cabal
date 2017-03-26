@@ -1,0 +1,39 @@
+name:                str-text-partial
+version:             0.1.0.0
+synopsis:            str-text with placeholders for missing implementations
+license:             BSD3
+author:              Edward Z. Yang
+maintainer:          ezyang@cs.stanford.edu
+category:            Data
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >= 1.25
+
+library
+  exposed-modules:     Str.Text.Partial
+                       Str.Text.Lazy.Partial
+  build-depends:       str-undefined,
+                       str-text,
+                       base
+  mixins:              str-undefined (Str.Undefined as Str.Text.Undefined)
+                            requires (Str as Str.Text),
+                       str-undefined (Str.Undefined as Str.Text.Lazy.Undefined)
+                            requires (Str as Str.Text.Lazy)
+  default-language:    Haskell2010
+
+library shim
+  reexported-modules:  Prelude
+  build-depends:       base, str-sig
+  default-language:    Haskell2010
+
+test-suite implements
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  build-depends:
+    base,
+    str-text-partial,
+    shim
+  mixins:
+    shim requires (Str as Str.Text.Partial),
+    shim requires (Str as Str.Text.Lazy.Partial)
+  default-language:    Haskell2010
