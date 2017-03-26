@@ -5,7 +5,7 @@ packages:
     str-text
     str-text/partial
     str-string
-    -- str-string/tests
+    str-string/partial
     str-undefined
     str-tests
     str-tests-compare

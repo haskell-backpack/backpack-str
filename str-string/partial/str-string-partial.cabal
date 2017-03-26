@@ -1,4 +1,4 @@
-name:                str-string-test
+name:                str-string-partial
 version:             0.0
 synopsis:            Tests for str-string (using Backpack features)
 license:             BSD3
@@ -9,10 +9,18 @@ build-type:          Simple
 extra-source-files:  ChangeLog.md
 cabal-version:       >= 1.25
 
-library string-sig
-  signatures:          Str
+library
+  exposed-modules:     Str.String.Partial
+  build-depends:       str-undefined,
+                       str-string,
+                       base
+  mixins:              str-undefined (Str.Undefined as Str.String.Undefined)
+                            requires (Str as Str.String)
+  default-language:    Haskell2010
+
+library shim
   reexported-modules:  Prelude
-  build-depends:       base >= 4.9, str-sig
+  build-depends:       base, str-sig
   default-language:    Haskell2010
 
 test-suite implements
@@ -20,6 +28,8 @@ test-suite implements
   main-is:             Main.hs
   build-depends:
     base,
-    string-sig,
-    str-string
+    str-string-partial,
+    shim
+  mixins:
+    shim requires (Str as Str.String.Partial)
   default-language:    Haskell2010
