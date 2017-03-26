@@ -1,6 +1,12 @@
 name:                str-string-partial
-version:             0.0
-synopsis:            Tests for str-string (using Backpack features)
+version:             0.1.0.0
+synopsis:            str-string with placeholders for missing implementations
+description:         This package contains Partial variants of the modules from
+                     str-string, where any str-sig functions which were missing
+                     from str-string have been filled with placeholder
+                     implementations which will fail at runtime.  You can use
+                     this to defer match errors to runtime exceptions, which
+                     can be caught and handled like other exceptions.
 license:             BSD3
 author:              Edward Z. Yang
 maintainer:          ezyang@cs.stanford.edu
@@ -12,7 +18,7 @@ cabal-version:       >= 1.25
 library
   exposed-modules:     Str.String.Partial
   build-depends:       str-undefined,
-                       str-string,
+                       str-string == 0.1.0.*,
                        base
   mixins:              str-undefined (Str.Undefined as Str.String.Undefined)
                             requires (Str as Str.String)

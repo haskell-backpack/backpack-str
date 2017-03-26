@@ -1,6 +1,12 @@
 name:                str-bytestring-partial
 version:             0.1.0.0
 synopsis:            str-bytestring with placeholders for missing implementations
+description:         This package contains Partial variants of the modules from
+                     str-bytestring, where any str-sig functions which were missing
+                     from str-bytestring have been filled with placeholder
+                     implementations which will fail at runtime.  You can use
+                     this to defer match errors to runtime exceptions, which
+                     can be caught and handled like other exceptions.
 license:             BSD3
 author:              Edward Z. Yang
 maintainer:          ezyang@cs.stanford.edu
@@ -15,7 +21,7 @@ library
                        Str.ByteString.Lazy.Char8.Partial
                        Str.ByteString.Lazy.Partial
   build-depends:       str-undefined,
-                       str-bytestring,
+                       str-bytestring == 0.1.0.*,
                        base
   mixins:              str-undefined (Str.Undefined as Str.ByteString.Undefined)
                             requires (Str as Str.ByteString),

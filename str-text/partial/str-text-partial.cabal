@@ -1,6 +1,12 @@
 name:                str-text-partial
 version:             0.1.0.0
 synopsis:            str-text with placeholders for missing implementations
+description:         This package contains Partial variants of the modules from
+                     str-text, where any str-sig functions which were missing
+                     from str-text have been filled with placeholder
+                     implementations which will fail at runtime.  You can use
+                     this to defer match errors to runtime exceptions, which
+                     can be caught and handled like other exceptions.
 license:             BSD3
 author:              Edward Z. Yang
 maintainer:          ezyang@cs.stanford.edu
@@ -13,7 +19,7 @@ library
   exposed-modules:     Str.Text.Partial
                        Str.Text.Lazy.Partial
   build-depends:       str-undefined,
-                       str-text,
+                       str-text == 0.1.0.*,
                        base
   mixins:              str-undefined (Str.Undefined as Str.Text.Undefined)
                             requires (Str as Str.Text),
