@@ -13,6 +13,10 @@ build-type:          Simple
 extra-source-files:  ChangeLog.md
 cabal-version:       >= 2.0
 
+flag foundation
+  description: Test foundation
+  default: True
+
 library
   exposed-modules:     Str.Tests.Compare
   build-depends:       base >= 4.10 && < 4.11,
@@ -35,6 +39,9 @@ library insts
                        bytestring,
                        text,
                        QuickCheck
+  if flag(foundation)
+    build-depends:     foundation
+    exposed-modules:   Str.Foundation.Instances
   default-language:    Haskell2010
 
 test-suite bl-b
@@ -88,5 +95,21 @@ test-suite t-s
                        test-framework,
                        base
   mixins:              str-text-partial (Str.Text.Partial as AStr),
+                       str-string-partial (Str.String.Partial as BStr)
+  default-language:    Haskell2010
+
+test-suite f-s
+  if !flag(foundation)
+    buildable: False
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  hs-source-dirs:      main
+  build-depends:       str-tests-compare,
+                       str-foundation-partial,
+                       str-string-partial,
+                       insts,
+                       test-framework,
+                       base
+  mixins:              str-foundation-partial (Str.Foundation.Partial as AStr),
                        str-string-partial (Str.String.Partial as BStr)
   default-language:    Haskell2010

@@ -1,0 +1,36 @@
+name:                str-foundation-partial
+version:             0.1.0.0
+synopsis:            str-foundation with placeholders for missing implementations
+description:         This package contains Partial variants of the modules from
+                     str-foundation, where any str-sig functions which were missing
+                     from str-foundation have been filled with placeholder
+                     implementations which will fail at runtime.  You can use
+                     this to defer match errors to runtime exceptions, which
+                     can be caught and handled like other exceptions.
+license:             BSD3
+author:              Edward Z. Yang
+maintainer:          ezyang@cs.stanford.edu
+category:            Data
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >= 1.25
+
+library
+  exposed-modules:     Str.Foundation.Partial
+  build-depends:       str-undefined,
+                       str-foundation == 0.1.0.*,
+                       base
+  mixins:              str-undefined (Str.Undefined as Str.Foundation.Undefined)
+                            requires (Str as Str.Foundation)
+  default-language:    Haskell2010
+
+test-suite implements
+  type:                exitcode-stdio-1.0
+  main-is:             Main.hs
+  build-depends:
+    base,
+    str-foundation-partial,
+    str-sig
+  mixins:
+    str-sig requires (Str as Str.Foundation.Partial)
+  default-language:    Haskell2010
