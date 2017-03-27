@@ -20,6 +20,6 @@ library
                        Str.ByteString.Lazy.Char8
   if impl(ghc >= 7.9)
     reexported-modules:  Str.ByteString as Str
-  build-depends:       base >= 4.7 && < 4.11,
+  build-depends:       base >= 4.5 && < 4.11,
                        bytestring >= 0.10.8 && < 0.11
   default-language:    Haskell2010
