@@ -20,7 +20,7 @@ library
                        Str.ByteString.Char8.Partial
                        Str.ByteString.Lazy.Char8.Partial
                        Str.ByteString.Lazy.Partial
-  build-depends:       str-undefined,
+  build-depends:       str-undefined  == 0.1.0.*,
                        str-bytestring == 0.1.0.*,
                        base
   mixins:              str-undefined (Str.Undefined as Str.ByteString.Undefined)
