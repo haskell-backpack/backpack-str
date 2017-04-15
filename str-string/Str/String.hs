@@ -1,6 +1,27 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE Safe #-}
--- | Adaptor module for 'String' that implements the Str signature.
+-- |
+-- Module      : Str.String
+-- Copyright   : (c) Edward Z. Yang 2017
+-- License     : BSD-style
+-- Maintainer  : ezyang@mit.edu
+-- Stability   : unstable
+-- Portability : non-portable
+--
+-- An adaptor module for 'String' which fulls the Str
+-- signature from the str-sig package.  This string is implemented
+-- as a lazy list of Unicode characters; although not very efficient,
+-- support for these strings can be helpful for interoperation with
+-- legacy Haskell code.
+--
+-- This module is intended to be imported @qualified@, to avoid name
+-- clashes with "Prelude" functions.
+--
+-- > import qualified Str.String as S
+--
+-- Rather than import this module directly, consider parametrizing your
+-- package using str-sig instead!
+--
 module Str.String (
     -- * String types
     Str,
@@ -193,8 +214,17 @@ import System.Posix.Internals
 import qualified GHC.Foreign as GHC
 import GHC.IO.Encoding (getFileSystemEncoding)
 
+-- | Representation of strings as a linked list of Unicode characters.
+--
 type Str = String
+
+-- | The characters of a 'String' are Unicode characters.
+--
 type Chr = Char
+
+-- | The length and positions of characters within a 'String' are
+-- measured with machine-precision 'Int'.
+--
 type Index = Int
 
 -- | /O(1)/ The empty 'Str'.  This value is expected to coincide with
@@ -743,6 +773,10 @@ elemIndex = P.elemIndex
 elemIndices :: Char -> Str -> [Index]
 elemIndices = P.elemIndices
 
+-- | /O(n)/ elemCount returns the number of times its argument appears in the Str
+--
+-- > elemCount = length . elemIndices
+--
 elemCount :: Char -> Str -> Index
 elemCount c = P.length . P.elemIndices c
 
@@ -785,6 +819,9 @@ zip = P.zip
 zipWith :: (Char -> Char -> a) -> Str -> Str -> [a]
 zipWith = P.zipWith
 
+-- | /O(n)/ 'packZipWith' is identical to 'zipWith', but monomorphized
+-- to always return a 'Str'.
+--
 packZipWith :: (Char -> Char -> Char) -> Str -> Str -> Str
 packZipWith = zipWith
 
@@ -859,8 +896,17 @@ newOSString   = newFilePath
 packOSString :: CString -> IO Str
 packOSString  = peekFilePath
 
+-- | /O(n)./ Construct a new @Str@ from a @CString@. The
+-- resulting @Str@ is an immutable copy of the original
+-- @CString@, and is managed on the Haskell heap. The original
+-- @CString@ must be null terminated.
+--
 packCString :: CString -> IO Str
 packCString = peekCString
 
+-- | /O(n)./ Construct a new @Str@ from a @CStringLen@. The
+-- resulting @Str@ is an immutable copy of the original @CStringLen@.
+-- The @Str@ is a normal Haskell value and will be managed on the
+-- Haskell heap.
 packCStringLen :: CStringLen -> IO Str
 packCStringLen = peekCStringLen
