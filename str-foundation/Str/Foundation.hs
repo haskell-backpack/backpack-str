@@ -190,8 +190,17 @@ import Foundation.String (lines, words)
 import System.Posix.Internals (withFilePath, newFilePath, peekFilePath)
 import Foreign.C (CString)
 
+-- | A packed, space-efficient, UTF-8 encoded string.
+--
 type Str = F.String
+
+-- | The length and positions of characters within a 'Text' are
+-- measured with machine-precision 'Int'.
+--
 type Index = Int
+
+-- | The characters of a 'F.String' are Unicode characters.
+--
 type Chr = Char
 
 -- | /O(1)/ The empty 'Str'.  This value is expected to coincide with

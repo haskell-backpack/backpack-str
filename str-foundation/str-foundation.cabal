@@ -11,10 +11,11 @@ maintainer:          ezyang@cs.stanford.edu
 category:            Data
 build-type:          Simple
 extra-source-files:  ChangeLog.md
-cabal-version:       >= 1.20
+cabal-version:       >= 1.21
 
 library
   exposed-modules:     Str.Foundation
-  reexported-modules:  Str.Foundation as Str
+  if impl(ghc >= 7.9)
+    reexported-modules:  Str.Foundation as Str
   build-depends:       base >= 4.9, foundation >= 0.0 && < 0.1
   default-language:    Haskell2010
