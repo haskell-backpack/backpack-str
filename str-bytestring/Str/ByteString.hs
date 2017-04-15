@@ -1,4 +1,27 @@
 {-# LANGUAGE Trustworthy #-}
+-- |
+-- Module      : Str.ByteString
+-- Copyright   : (c) Edward Z. Yang 2017
+-- License     : BSD-style
+-- Maintainer  : ezyang@mit.edu
+-- Stability   : unstable
+-- Portability : non-portable
+--
+-- An adaptor module for "Data.ByteString" which fulls the Str
+-- signature from the str-sig package.  The implementation of strings
+-- this module implements is a time and space-efficient implementation
+-- of byte vectors using packed Word8 arrays.  This module provides
+-- an API which interprets the characters of these strings as 8-bit
+-- words.
+--
+-- This module is intended to be imported @qualified@, to avoid name
+-- clashes with "Prelude" functions.
+--
+-- > import qualified Str.ByteString as S
+--
+-- Rather than import this module directly, consider parametrizing your
+-- package using str-sig instead!
+--
 module Str.ByteString (
     -- * String types
     Str,
@@ -189,13 +212,36 @@ import Data.ByteString
 import Data.ByteString.Unsafe
 import Data.Word (Word8)
 
+-- | A space-efficient representation of a 'Word8' vector, supporting many
+-- efficient operations.  Corresponds to 'ByteString' from the
+-- bytestring library.
+--
 type Str = ByteString
+
+-- | The characters of a 'ByteString' are 8-bit words.
+--
 type Chr = Word8
+
+-- | The length and positions of characters within a 'Str' are
+-- measured with machine-precision 'Int'.
+--
 type Index = Int
 
+-- | /O(n) construction/ Use a 'Str' with a function requiring a
+-- null-terminated @CString@.  The @CString@ is a copy and will be freed
+-- automatically; it must not be stored or used after the
+-- subcomputation finishes.  Corresponds to 'useAsCString' from
+-- the bytestring library.
+--
 useAsOSString :: Str -> (CString -> IO a) -> IO a
 useAsOSString = useAsCString
 
+-- | /O(n)/.  Marshal a 'Str' into a NUL terminated C string.
+--
+-- * New storage is allocated for the C string and must be
+--   explicitly freed using 'Foreign.Marshal.Alloc.free' or
+--   'Foreign.Marshal.Alloc.finalizerFree'.
+--
 newOSString   :: Str -> IO CString
 newOSString s = unsafeUseAsCStringLen s $ \(c,l) -> do
                     p <- mallocBytes (l+1)
@@ -203,9 +249,19 @@ newOSString s = unsafeUseAsCStringLen s $ \(c,l) -> do
                     pokeByteOff p l (0::Word8)
                     return p
 
+-- | /O(n)./ Construct a new @ByteString@ from a @CString@. The
+-- resulting @ByteString@ is an immutable copy of the original
+-- @CString@, and is managed on the Haskell heap. The original
+-- @CString@ must be null terminated.  Corresponds to 'packCString'
+-- from the bytestring library.
+--
 packOSString  :: CString -> IO Str
 packOSString  = packCString
 
+-- | Break a string on a substring, returning a pair of the part of the
+-- string prior to the match, and the rest of the string.  Corresponds
+-- to 'breakSubstring' from the bytestring library.
+--
 breakOn :: Str -> Str -> (Str, Str)
 breakOn = breakSubstring
 
@@ -217,8 +273,14 @@ breakOn = breakSubstring
 --
 -- > elemCount = length . elemIndices
 --
+-- Corresponds to 'count' from the bytestring library.
+--
 elemCount = count
 
+-- | /O(n)/ Analogous to (:) for lists, but of different
+-- complexity, as it requires making a copy.  Corresponds to
+-- 'cons' from the bytestring library.
+--
 cons' :: Chr -> Str -> Str
 cons' = cons
 

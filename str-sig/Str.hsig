@@ -1240,8 +1240,7 @@ packCStringLen :: CStringLen -> IO Str
 --
 useAsOSString :: Str -> (CString -> IO a) -> IO a
 
--- | Marshal a 'Str' into a NUL terminated C string. However, it may
---   optionally be NUL terminated.
+-- | Marshal a 'Str' into a NUL terminated C string.
 --
 -- * if 'Str' is Unicode, it is encoded to bytes using PEP 383
 --   ('GHC.IO.Encoding.getFileSystemEncoding'), which will interpret
