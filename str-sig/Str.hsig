@@ -1142,7 +1142,7 @@ findIndices :: (Chr -> Bool) -> Str -> [Index]
 --
 elemCount :: Chr -> Str -> Index
 
--- | /O(n+m)/ The 'count' function returns the number of times the
+-- | /O(n+m)/ The 'substringCount' function returns the number of times the
 -- query string appears in the given 'Str'. An empty query string is
 -- invalid, and will cause an error to be raised.
 --

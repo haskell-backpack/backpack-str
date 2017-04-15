@@ -222,7 +222,7 @@ type Str = ByteString
 --
 type Chr = Word8
 
--- | The length and positions of characters within a 'Str' are
+-- | The length and positions of characters within a 'Text' are
 -- measured with machine-precision 'Int'.
 --
 type Index = Int
