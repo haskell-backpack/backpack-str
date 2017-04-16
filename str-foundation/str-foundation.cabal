@@ -17,5 +17,6 @@ library
   exposed-modules:     Str.Foundation
   if impl(ghc >= 7.9)
     reexported-modules:  Str.Foundation as Str
-  build-depends:       base >= 4.9, foundation >= 0.0 && < 0.1
+  build-depends:       base >= 4.9 && < 4.11,
+                       foundation >= 0.0 && < 0.1
   default-language:    Haskell2010
