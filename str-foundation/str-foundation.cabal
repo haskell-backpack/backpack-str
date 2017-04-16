@@ -8,7 +8,7 @@ license:             BSD3
 license-file:        LICENSE
 author:              Edward Z. Yang
 maintainer:          ezyang@cs.stanford.edu
-category:            Data
+category:            Str
 build-type:          Simple
 extra-source-files:  ChangeLog.md
 cabal-version:       >= 1.21

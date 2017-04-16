@@ -10,7 +10,7 @@ description:         This package contains Partial variants of the modules from
 license:             BSD3
 author:              Edward Z. Yang
 maintainer:          ezyang@cs.stanford.edu
-category:            Data
+category:            Str
 build-type:          Simple
 extra-source-files:  ChangeLog.md
 cabal-version:       >= 1.25
