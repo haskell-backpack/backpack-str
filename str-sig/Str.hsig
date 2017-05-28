@@ -677,7 +677,7 @@ unfoldr :: (a -> Maybe (Chr, a)) -> a -> Str
 --
 -- > fst (unfoldrN n f s) == take n (unfoldr f s)
 --
-unfoldrN :: Int -> (a -> Maybe (Chr, a)) -> a -> (Str, Maybe a)
+unfoldrN :: Index -> (a -> Maybe (Chr, a)) -> a -> (Str, Maybe a)
 
 -- ---------------------------------------------------------------------
 -- Substrings: Breaking strings

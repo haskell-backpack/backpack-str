@@ -1,5 +1,5 @@
 name:                str-sig
-version:             0.1.0.1
+version:             0.1.0.2
 synopsis:            Signature package for String-like types.
 description:         This package provides a Str signature which defines
                      common namespace of functionality provided by
@@ -7,13 +7,14 @@ description:         This package provides a Str signature which defines
                      this signature can be found in str-string,
                      str-bytestring, str-text and str-foundation.
                      .
-                     This package will never introduce a backwards
-                     incompatible change in an update; however, we may
-                     release new versions of this signature which add
-                     methods. To ensure that your code continues
-                     working, please locally declare which methods from
-                     this signature you are using; you can find instructions
-                     for how to do this in <https://wiki.haskell.org/Module_signature>
+                     Once this signature is stabilized, this package
+                     will never introduce a backwards incompatible
+                     change in an update; however, we may release new
+                     versions of this signature which add methods. To
+                     ensure that your code continues working, please
+                     locally declare which methods from this signature
+                     you are using; you can find instructions for how to
+                     do this in <https://wiki.haskell.org/Module_signature>
 license:             BSD3
 license-file:        LICENSE
 author:              Edward Z. Yang

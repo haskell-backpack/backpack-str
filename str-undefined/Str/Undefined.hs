@@ -413,7 +413,7 @@ concatReplicate _ _ = u "concatReplicate"
 unfoldr :: (a -> Maybe (Chr, a)) -> a -> Str
 unfoldr _ _ = u "unfoldr"
 
-unfoldrN :: Int -> (a -> Maybe (Chr, a)) -> a -> (Str, Maybe a)
+unfoldrN :: Index -> (a -> Maybe (Chr, a)) -> a -> (Str, Maybe a)
 unfoldrN _ _ _ = u "unfoldrN"
 
 -- ---------------------------------------------------------------------

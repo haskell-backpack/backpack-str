@@ -1,5 +1,5 @@
 name:                str-undefined
-version:             0.1.0.0
+version:             0.1.0.1
 synopsis:            Str transformer which fills in all implementations with undefined
 description:         This package, once instantiated with types for Str, Chr and Index,
                      provides undefined (i.e., will fail at runtime) implementations of
@@ -17,7 +17,7 @@ library
   signatures:          Str
   exposed-modules:     Str.Undefined
   build-depends:       base >= 4.10 && < 4.11,
-                       str-sig >= 0.1
+                       str-sig >= 0.1.0.2
   default-language:    Haskell2010
 
 test-suite implements
