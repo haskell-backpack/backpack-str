@@ -1,3 +1,22 @@
+-- |
+-- Module      : Str
+-- Copyright   : (c) Edward Z. Yang 2017
+-- License     : BSD-style
+-- Maintainer  : ezyang@mit.edu
+-- Stability   : unstable
+-- Portability : non-portable
+--
+-- A signature for strings (monomorphic sequences), abstracting
+-- over 'Str' (the string type), 'Chr' (the character type)
+-- and 'Index' (the numeric type for indexing into strings; either
+-- 'Int' or 'Int64').  See the README of this package for more
+-- details.
+--
+-- This module is intended to be imported @qualified@, to avoid name
+-- clashes with "Prelude" functions.
+--
+-- > import qualified Str as S
+--
 signature Str (
     -- * String types
     Str,
